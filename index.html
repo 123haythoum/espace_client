@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boutique Journali</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="https://scontent.ftun1-2.fna.fbcdn.net/v/t39.30808-6/692143067_122160380720960850_6444198521542776975_n.jpg?stp=dst-jpg_tt6&cstp=mx1024x1024&ctp=s1024x1024&_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dAR5ynhJUcYQ7kNvwGCOj9Q&_nc_oc=AdryRU6kswtiTv0wSudUTFBYuQJ5NEgTc_uz7quSs0WJCJRyvjjZqJGm4cZM2JULy-s&_nc_zt=23&_nc_ht=scontent.ftun1-2.fna&_nc_gid=PhGPiH7gARf7VBEkCSSJ6A&_nc_ss=7b2a8&oh=00_Af8WKipmsYuHVea3XZyYhhgNl9dWu6bMo8I_Ab6bqOZklw&oe=6A2C75EA">
+    
+    <!-- Scripts Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    
+    <style>
+        :root { --primary-color: #2c3e50; --secondary-color: #e67e22; --bg-color: #f4f6f9; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background-color: var(--bg-color); color: #333; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: var(--primary-color); letter-spacing: 2px; }
+        
+        #catalog-section { width: 100%; max-width: 900px; }
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .product-card { background: white; border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 6px 15px rgba(0,0,0,0.05); transition: 0.3s; }
+        .product-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+        .product-name { font-weight: bold; color: var(--primary-color); margin-bottom: 5px; }
+        .product-price { color: var(--secondary-color); font-weight: bold; margin-bottom: 10px; }
+        
+        .btn-buy { background-color: var(--primary-color); color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; cursor: pointer; }
+        .btn-buy:hover { background-color: var(--secondary-color); }
+
+        .order-card { background: white; width: 100%; max-width: 500px; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); display: none; }
+        .form-group { margin-bottom: 15px; }
+        input, textarea, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+        .btn-submit { background-color: var(--secondary-color); color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>JOURNALI</h1>
+    </div>
+
+    <div id="catalog-section">
+        <div class="catalog-grid" id="catalog-container"></div>
+    </div>
+
+    <div id="form-section" class="order-card">
+        <button onclick="location.reload()" style="margin-bottom:15px; cursor:pointer;">⬅ Retour au catalogue</button>
+        <div id="form-content">
+            <h2>Finaliser la commande</h2>
+            <form id="client-form" onsubmit="envoyerCommande(event)">
+                <div class="form-group"><input type="text" id="client-nom" placeholder="Nom et Prénom" required></div>
+                <div class="form-group"><input type="tel" id="client-tel" placeholder="Téléphone" required></div>
+                <div class="form-group"><textarea id="client-adresse" placeholder="Adresse de livraison" required></textarea></div>
+                <div class="form-group"><select id="client-produit" disabled style="background-color: #eee;"></select></div>
+                <div class="form-group"><input type="number" id="client-qty" value="1" min="1" required></div>
+                <button type="submit" class="btn-submit">Confirmer la commande</button>
+            </form>
+        </div>
+        <!-- Message de succès -->
+        <div id="success-msg" style="display:none; text-align:center; padding:20px;">
+            <h3 style="color:green; margin-bottom:10px;">✅ Commande envoyée !</h3>
+            <p>Votre commande sera bientôt confirmée. Attendez notre appel.</p>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCDV63W3AlfDr-99apHpktPidgpFurh96g",
+            databaseURL: "https://journali-a0171-default-rtdb.europe-west1.firebasedatabase.app"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        
+        const images = [
+            "https://github.com/123haythoum/espace_client/blob/main/images/1.jpg?raw=true",
+            "https://github.com/123haythoum/espace_client/blob/main/images/2.jpg?raw=true",
+            "https://github.com/123haythoum/espace_client/blob/main/images/3.jpg?raw=true",
+            "https://github.com/123haythoum/espace_client/blob/main/images/4.jpg?raw=true",
+            "https://github.com/123haythoum/espace_client/blob/main/images/5.jpg?raw=true",
+            "https://github.com/123haythoum/espace_client/blob/main/images/6.jpg?raw=true"
+        ];
+
+        db.ref("data_magasin/inventaire").once("value", (snapshot) => {
+            const data = snapshot.val();
+            let container = document.getElementById("catalog-container");
+            data.forEach((p, index) => {
+                let imgUrl = images[index] || "https://via.placeholder.com/250";
+                container.innerHTML += `
+                    <div class="product-card">
+                        <img src="${imgUrl}">
+                        <div class="product-name">${p.nom}</div>
+                        <div class="product-price">${p.prix} DT</div>
+                        <button class="btn-buy" onclick="commander('${p.id}', '${p.nom}')">Acheter</button>
+                    </div>
+                `;
+            });
+        });
+
+        function commander(id, nom) {
+            document.getElementById("catalog-section").style.display = "none";
+            document.getElementById("form-section").style.display = "block";
+            let select = document.getElementById("client-produit");
+            select.innerHTML = `<option value="${id}">${nom}</option>`;
+        }
+
+        function envoyerCommande(e) {
+            e.preventDefault();
+            const cmd = {
+                date: new Date().toLocaleString(),
+                client: document.getElementById("client-nom").value,
+                telephone: document.getElementById("client-tel").value,
+                adresse: document.getElementById("client-adresse").value,
+                article: document.getElementById("client-produit").options[0].text,
+                idArticle: document.getElementById("client-produit").value,
+                quantite: document.getElementById("client-qty").value
+            };
+            
+            db.ref("data_magasin/commandes").push(cmd).then(() => {
+                document.getElementById("form-content").style.display = "none";
+                document.getElementById("success-msg").style.display = "block";
+            });
+        }
+    </script>
+</body>
+</html>
