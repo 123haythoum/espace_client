@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boutique Journali</title>
+    <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="https://scontent.ftun1-2.fna.fbcdn.net/v/t39.30808-6/692143067_122160380720960850_6444198521542776975_n.jpg?stp=dst-jpg_tt6&cstp=mx1024x1024&ctp=s1024x1024&_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dAR5ynhJUcYQ7kNvwGCOj9Q&_nc_oc=AdryRU6kswtiTv0wSudUTFBYuQJ5NEgTc_uz7quSs0WJCJRyvjjZqJGm4cZM2JULy-s&_nc_zt=23&_nc_ht=scontent.ftun1-2.fna&_nc_gid=PhGPiH7gARf7VBEkCSSJ6A&_nc_ss=7b2a8&oh=00_Af8WKipmsYuHVea3XZyYhhgNl9dWu6bMo8I_Ab6bqOZklw&oe=6A2C75EA">
     
+    <!-- Scripts Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     
@@ -15,7 +17,6 @@
         body { background-color: var(--bg-color); color: #333; display: flex; flex-direction: column; align-items: center; padding: 20px; }
         
         .header { text-align: center; margin-bottom: 30px; }
-        .header img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--secondary-color); box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 10px; }
         .header h1 { color: var(--primary-color); letter-spacing: 2px; }
         
         #catalog-section { width: 100%; max-width: 900px; }
@@ -31,7 +32,7 @@
         .order-card { background: white; width: 100%; max-width: 500px; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); display: none; }
         .form-group { margin-bottom: 15px; }
         input, textarea, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-        .btn-submit { background-color: var(--secondary-color); color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; }
+        .btn-submit { background-color: var(--secondary-color); color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -45,15 +46,23 @@
     </div>
 
     <div id="form-section" class="order-card">
-        <button onclick="location.reload()" style="margin-bottom:15px;">⬅ Retour</button>
-        <h2>Finaliser la commande</h2>
-        <form id="client-form" onsubmit="envoyerCommande(event)">
-            <div class="form-group"><input type="text" id="client-nom" placeholder="Nom et Prénom" required></div>
-            <div class="form-group"><input type="tel" id="client-tel" placeholder="Téléphone" required></div>
-            <div class="form-group"><textarea id="client-adresse" placeholder="Adresse" required></textarea></div>
-            <div class="form-group"><select id="client-produit" disabled></select></div>
-            <button type="submit" class="btn-submit">Confirmer la commande</button>
-        </form>
+        <button onclick="location.reload()" style="margin-bottom:15px; cursor:pointer;">⬅ Retour au catalogue</button>
+        <div id="form-content">
+            <h2>Finaliser la commande</h2>
+            <form id="client-form" onsubmit="envoyerCommande(event)">
+                <div class="form-group"><input type="text" id="client-nom" placeholder="Nom et Prénom" required></div>
+                <div class="form-group"><input type="tel" id="client-tel" placeholder="Téléphone" required></div>
+                <div class="form-group"><textarea id="client-adresse" placeholder="Adresse de livraison" required></textarea></div>
+                <div class="form-group"><select id="client-produit" disabled style="background-color: #eee;"></select></div>
+                <div class="form-group"><input type="number" id="client-qty" value="1" min="1" required></div>
+                <button type="submit" class="btn-submit">Confirmer la commande</button>
+            </form>
+        </div>
+        <!-- Message de succès -->
+        <div id="success-msg" style="display:none; text-align:center; padding:20px;">
+            <h3 style="color:green; margin-bottom:10px;">✅ Commande envoyée !</h3>
+            <p>Votre commande sera bientôt confirmée. Attendez notre appel.</p>
+        </div>
     </div>
 
     <script>
@@ -105,11 +114,12 @@
                 adresse: document.getElementById("client-adresse").value,
                 article: document.getElementById("client-produit").options[0].text,
                 idArticle: document.getElementById("client-produit").value,
-                total: 0 // Ajoutez la logique de prix si nécessaire
+                quantite: document.getElementById("client-qty").value
             };
+            
             db.ref("data_magasin/commandes").push(cmd).then(() => {
-                alert("Commande envoyée !");
-                location.reload();
+                document.getElementById("form-content").style.display = "none";
+                document.getElementById("success-msg").style.display = "block";
             });
         }
     </script>
