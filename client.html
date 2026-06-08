@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boutique Journali</title>
+    <link rel="icon" type="image/jpeg" href="https://scontent.ftun1-2.fna.fbcdn.net/v/t39.30808-6/692143067_122160380720960850_6444198521542776975_n.jpg?stp=dst-jpg_tt6&cstp=mx1024x1024&ctp=s1024x1024&_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dAR5ynhJUcYQ7kNvwGCOj9Q&_nc_oc=AdryRU6kswtiTv0wSudUTFBYuQJ5NEgTc_uz7quSs0WJCJRyvjjZqJGm4cZM2JULy-s&_nc_zt=23&_nc_ht=scontent.ftun1-2.fna&_nc_gid=PhGPiH7gARf7VBEkCSSJ6A&_nc_ss=7b2a8&oh=00_Af8WKipmsYuHVea3XZyYhhgNl9dWu6bMo8I_Ab6bqOZklw&oe=6A2C75EA">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    
+    <style>
+        :root { --primary-color: #2c3e50; --secondary-color: #e67e22; --bg-color: #f4f6f9; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background-color: var(--bg-color); color: #333; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        
+        .header { text-align: center; margin-bottom: 30px; }
+        .header img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--secondary-color); box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 10px; }
+        .header h1 { color: var(--primary-color); letter-spacing: 2px; }
+        .header p { color: #7f8c8d; font-size: 1.1rem; }
+        
+        /* CATALOGUE GRID */
+        #catalog-section { width: 100%; max-width: 900px; }
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .product-card { background: white; border-radius: 12px; padding: 25px; text-align: center; box-shadow: 0 6px 15px rgba(0,0,0,0.05); position: relative; border-bottom: 5px solid transparent; transition: all 0.3s ease; }
+        .product-card:hover { transform: translateY(-5px); border-bottom: 5px solid var(--secondary-color); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+        .product-icon { font-size: 3rem; margin-bottom: 15px; }
+        .product-name { font-size: 1.2rem; font-weight: bold; color: var(--primary-color); margin-bottom: 10px; }
+        .product-price { font-size: 1.4rem; color: var(--secondary-color); font-weight: bold; }
+        
+        /* HOVER DETAILS */
+        .product-details { height: 0; overflow: hidden; opacity: 0; transition: all 0.4s ease; color: #7f8c8d; font-size: 0.9rem; margin-top: 10px; }
+        .product-card:hover .product-details { height: 60px; opacity: 1; margin-top: 15px;}
+        
+        .btn-buy { background-color: var(--primary-color); color: white; border: none; padding: 12px 20px; font-size: 1rem; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s; margin-top: 15px;}
+        .btn-buy:hover { background-color: var(--secondary-color); }
+
+        /* FORMULAIRE COMMANDE */
+        .order-card { background: white; width: 100%; max-width: 500px; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-top: 6px solid var(--secondary-color); display: none; }
+        .btn-back { background: transparent; border: 1px solid #ccc; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-bottom: 20px; font-weight: bold; color: #555; }
+        .btn-back:hover { background: #eee; }
+        h2 { color: var(--primary-color); margin-bottom: 20px; font-size: 1.4rem; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+        .btn-submit { background-color: var(--secondary-color); color: white; border: none; padding: 15px; font-size: 1.1rem; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px;}
+        .btn-submit:hover { background-color: #d35400; }
+        
+        #success-msg { display: none; background: #d4edda; color: #155724; padding: 15px; border-radius: 6px; text-align: center; font-weight: bold; margin-top: 20px; border: 1px solid #c3e6cb; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="https://scontent.ftun1-2.fna.fbcdn.net/v/t39.30808-6/692143067_122160380720960850_6444198521542776975_n.jpg?stp=dst-jpg_tt6&cstp=mx1024x1024&ctp=s1024x1024&_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dAR5ynhJUcYQ7kNvwGCOj9Q&_nc_oc=AdryRU6kswtiTv0wSudUTFBYuQJ5NEgTc_uz7quSs0WJCJRyvjjZqJGm4cZM2JULy-s&_nc_zt=23&_nc_ht=scontent.ftun1-2.fna&_nc_gid=PhGPiH7gARf7VBEkCSSJ6A&_nc_ss=7b2a8&oh=00_Af8WKipmsYuHVea3XZyYhhgNl9dWu6bMo8I_Ab6bqOZklw&oe=6A2C75EA" alt="Logo Journali">
+        <h1>JOURNALI</h1>
+        <p>Notre catalogue en ligne</p>
+    </div>
+
+    <!-- SECTION 1 : CATALOGUE -->
+    <div id="catalog-section">
+        <div class="catalog-grid" id="catalog-container">
+            <p style="text-align:center; grid-column: 1 / -1;">Chargement des produits...</p>
+        </div>
+    </div>
+
+    <!-- SECTION 2 : FORMULAIRE -->
+    <div id="form-section" class="order-card">
+        <button class="btn-back" onclick="retourCatalogue()">⬅ Retour au catalogue</button>
+        <h2>Finaliser la commande</h2>
+        
+        <form id="client-form" onsubmit="envoyerCommande(event)">
+            <div class="form-group">
+                <label for="client-nom">Nom et Prénom *</label>
+                <input type="text" id="client-nom" required placeholder="Ex: Mohamed Ben Ali">
+            </div>
+            <div class="form-group">
+                <label for="client-tel">Numéro de téléphone *</label>
+                <input type="tel" id="client-tel" required placeholder="Ex: 55 123 456">
+            </div>
+            <div class="form-group">
+                <label for="client-adresse">Adresse de livraison détaillée *</label>
+                <textarea id="client-adresse" rows="3" required placeholder="Ex: 15 Rue de la République, Tunis..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="client-produit">Produit sélectionné</label>
+                <select id="client-produit" required disabled style="background-color: #e9ecef; font-weight:bold;">
+                    <!-- Rempli automatiquement -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="client-qty">Quantité souhaitée *</label>
+                <input type="number" id="client-qty" min="1" value="1" required>
+            </div>
+            
+            <button type="submit" class="btn-submit">Confirmer ma commande</button>
+        </form>
+
+        <div id="success-msg">
+            ✅ Votre commande sera confirmée bientôt ! Attendez notre appel.
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCDV63W3AlfDr-99apHpktPidgpFurh96g",
+            authDomain: "journali-a0171.firebaseapp.com",
+            databaseURL: "https://journali-a0171-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "journali-a0171",
+            storageBucket: "journali-a0171.firebasestorage.app",
+            messagingSenderId: "524270095702",
+            appId: "1:524270095702:web:80257fb46a0a077b2e1af7"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        let catalogue = [];
+
+        // Récupérer le catalogue pour l'affichage
+        db.ref("data_magasin/inventaire").once("value", (snapshot) => {
+            const data = snapshot.val();
+            if(data) {
+                catalogue = data;
+                afficherCatalogue();
+            }
+        });
+
+        function afficherCatalogue() {
+            let container = document.getElementById("catalog-container");
+            container.innerHTML = "";
+            let selectOptions = "";
+            
+            catalogue.forEach(p => {
+                // Créer l'option pour le formulaire caché
+                selectOptions += `<option value="${p.id}">${p.nom} (${p.prix} DT)</option>`;
+                
+                // Déterminer une petite icône selon le nom
+                let icone = "📓";
+                if(p.nom.toLowerCase().includes("roulement")) icone = "📋";
+                if(p.nom.toLowerCase().includes("agenda")) icone = "📅";
+
+                // Créer la carte produit
+                container.innerHTML += `
+                    <div class="product-card">
+                        <div class="product-icon">${icone}</div>
+                        <div class="product-name">${p.nom}</div>
+                        <div class="product-price">${p.prix.toFixed(2)} DT</div>
+                        <div class="product-details">
+                            Papier de haute qualité. Parfaitement adapté pour une utilisation professionnelle et durable.
+                        </div>
+                        <button class="btn-buy" onclick="preparerCommande('${p.id}')">🛒 Acheter</button>
+                    </div>
+                `;
+            });
+            document.getElementById("client-produit").innerHTML = selectOptions;
+        }
+
+        function preparerCommande(idProduit) {
+            // Cacher catalogue, montrer formulaire
+            document.getElementById("catalog-section").style.display = "none";
+            document.getElementById("form-section").style.display = "block";
+            // Sélectionner le bon produit
+            document.getElementById("client-produit").value = idProduit;
+        }
+
+        function retourCatalogue() {
+            document.getElementById("catalog-section").style.display = "block";
+            document.getElementById("form-section").style.display = "none";
+            document.getElementById("success-msg").style.display = "none";
+            document.getElementById("client-form").style.display = "block";
+        }
+
+        function envoyerCommande(e) {
+            e.preventDefault();
+            
+            const idProduit = document.getElementById("client-produit").value;
+            const quantite = parseInt(document.getElementById("client-qty").value);
+            const produit = catalogue.find(p => p.id === idProduit);
+            
+            const nouvelleCommande = {
+                date: new Date().toLocaleString('fr-FR'),
+                client: document.getElementById("client-nom").value,
+                telephone: document.getElementById("client-tel").value,
+                adresse: document.getElementById("client-adresse").value,
+                idArticle: produit.id,  // IMPORTANT POUR L'ADMIN
+                article: produit.nom,
+                quantite: quantite,
+                total: produit.prix * quantite
+            };
+
+            db.ref("data_magasin/commandes").push(nouvelleCommande).then(() => {
+                document.getElementById("client-form").style.display = "none";
+                document.getElementById("success-msg").style.display = "block";
+                
+                setTimeout(() => {
+                    document.getElementById("client-form").reset();
+                    retourCatalogue();
+                }, 4000);
+            });
+        }
+    </script>
+</body>
+</html>
