@@ -214,11 +214,14 @@
             }
         });
 
-        // Charger les avis depuis Firebase (limite aux 8 derniers pour ne pas surcharger la page)
+        // Charger les avis depuis Firebase (limite aux 8 derniers)
         db.ref("data_magasin/avis").limitToLast(8).once("value", (snapshot) => {
             const avisData = snapshot.val();
             if(avisData) {
                 afficherAvis(avisData);
+            } else {
+                // Si la base de données est vide, afficher des avis fictifs pour ne pas avoir une section vide
+                afficherAvisParDefaut();
             }
         });
 
@@ -306,6 +309,27 @@
                     `;
                 });
             }
+        }
+
+        function afficherAvisParDefaut() {
+            let container = document.getElementById("reviews-container");
+            let wrapper = document.getElementById("reviews-wrapper");
+            
+            wrapper.style.display = "block";
+            container.innerHTML = `
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-date">Récemment</div>
+                    <div class="review-text">" Produit d'une excellente qualité, parfaitement adapté à mes besoins en classe. Merci ! "</div>
+                    <div style="margin-top:10px; font-weight:bold; color:var(--primary-color); font-size:0.9rem;">— Enseignant(e)</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-date">Récemment</div>
+                    <div class="review-text">" Le journal personnalisé est magnifique. C'est du travail de pros. Je recommande ! "</div>
+                    <div style="margin-top:10px; font-weight:bold; color:var(--primary-color); font-size:0.9rem;">— Enseignant(e)</div>
+                </div>
+            `;
         }
 
         function voirDetails(index) {
