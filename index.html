@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boutique Journali - Espace Enseignants</title>
+    <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="https://scontent.ftun1-2.fna.fbcdn.net/v/t39.30808-6/692143067_122160380720960850_6444198521542776975_n.jpg?stp=dst-jpg_tt6&cstp=mx1024x1024&ctp=s1024x1024&_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dAR5ynhJUcYQ7kNvwGCOj9Q&_nc_oc=AdryRU6kswtiTv0wSudUTFBYuQJ5NEgTc_uz7quSs0WJCJRyvjjZqJGm4cZM2JULy-s&_nc_zt=23&_nc_ht=scontent.ftun1-2.fna&_nc_gid=PhGPiH7gARf7VBEkCSSJ6A&_nc_ss=7b2a8&oh=00_Af8WKipmsYuHVea3XZyYhhgNl9dWu6bMo8I_Ab6bqOZklw&oe=6A2C75EA">
     
+    <!-- Scripts Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     
@@ -57,6 +59,15 @@
         .stars { font-size: 2rem; color: #ccc; cursor: pointer; margin: 15px 0;}
         .stars span.active { color: #f1c40f; }
 
+        /* Reviews Display */
+        .reviews-wrapper { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ddd; width: 100%; }
+        .reviews-wrapper h2 { color: var(--primary-color); text-align: center; margin-bottom: 20px; }
+        .reviews-grid { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin;}
+        .review-card { background: white; padding: 15px; border-radius: 8px; min-width: 260px; max-width: 300px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); flex-shrink: 0; border-left: 4px solid #f1c40f;}
+        .review-stars { font-size: 1.2rem; color: #f1c40f; margin-bottom: 5px;}
+        .review-date { font-size: 0.8rem; color: #999; margin-bottom: 10px;}
+        .review-text { font-size: 0.95rem; color: #555; font-style: italic;}
+
         /* Footer Contact */
         .footer { margin-top: 40px; text-align: center; color: #7f8c8d; font-size: 0.9rem; padding: 20px; background: white; width: 100%; max-width: 900px; border-radius: 12px;}
         .footer a { color: var(--secondary-color); text-decoration: none; font-weight: bold;}
@@ -77,17 +88,30 @@
         <button class="cart-btn" onclick="ouvrirPanier()">🛒 Panier (<span id="cart-count">0</span>)</button>
     </div>
 
+    <!-- 1. CATALOGUE -->
     <div id="catalog-section" class="section active">
         <div class="catalog-grid" id="catalog-container">
+            <!-- Rendu dynamique -->
+        </div>
+
+        <!-- AFFICHAGE DES AVIS CLIENTS -->
+        <div class="reviews-wrapper" id="reviews-wrapper" style="display:none;">
+            <h2>Avis de nos clients / آراء عملائنا</h2>
+            <div class="reviews-grid" id="reviews-container">
+                <!-- Les avis seront insérés ici dynamiquement -->
             </div>
+        </div>
     </div>
 
+    <!-- 2. DETAILS PRODUIT -->
     <div id="details-section" class="section">
         <button class="btn-back" onclick="retourCatalogue()">⬅ Retour au catalogue / العودة</button>
         <div class="detail-view" id="detail-container">
-            </div>
+            <!-- Rendu dynamique -->
+        </div>
     </div>
 
+    <!-- 3. PANIER & COMMANDE -->
     <div id="cart-section" class="section">
         <button class="btn-back" onclick="retourCatalogue()">⬅ Continuer mes achats / مواصلة التسوق</button>
         <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
@@ -111,6 +135,7 @@
         </div>
     </div>
 
+    <!-- 4. SUCCES & FEEDBACK -->
     <div id="success-section" class="section" style="text-align: center; background: white; padding: 40px; border-radius: 12px;">
         <h2 style="color: green; margin-bottom: 15px;">✅ Commande envoyée avec succès !</h2>
         <p style="color: #555; margin-bottom: 30px;">Nous vous contacterons très prochainement pour la confirmation. / سنتصل بك قريباً لتأكيد الطلب.</p>
@@ -128,6 +153,7 @@
         </div>
     </div>
 
+    <!-- FOOTER CONTACT -->
     <div class="footer">
         <p>📞 Contact : 25801167 / 29148042</p>
         <p>📱 Rejoignez-nous sur <a href="https://www.facebook.com/profile.php?id=61578825508841" target="_blank">Notre Page Facebook</a></p>
@@ -188,6 +214,14 @@
             }
         });
 
+        // Charger les avis depuis Firebase (limite aux 8 derniers pour ne pas surcharger la page)
+        db.ref("data_magasin/avis").limitToLast(8).once("value", (snapshot) => {
+            const avisData = snapshot.val();
+            if(avisData) {
+                afficherAvis(avisData);
+            }
+        });
+
         function switchSection(sectionId) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
@@ -240,6 +274,38 @@
                     </div>
                 `;
             });
+        }
+
+        function afficherAvis(avisData) {
+            let container = document.getElementById("reviews-container");
+            let wrapper = document.getElementById("reviews-wrapper");
+            
+            // Convertir l'objet Firebase en tableau et l'inverser pour avoir les plus récents en premier
+            let avisList = Object.values(avisData).reverse();
+            
+            if(avisList.length > 0) {
+                wrapper.style.display = "block";
+                container.innerHTML = "";
+                
+                avisList.forEach(avis => {
+                    let note = parseInt(avis.note) || 5;
+                    let etoilesHtml = "";
+                    for(let i=1; i<=5; i++) {
+                        etoilesHtml += (i <= note) ? "★" : "<span style='color:#ccc'>★</span>";
+                    }
+                    
+                    let dateTexte = avis.date ? avis.date.split(' ')[0] : "Récemment";
+
+                    container.innerHTML += `
+                        <div class="review-card">
+                            <div class="review-stars">${etoilesHtml}</div>
+                            <div class="review-date">${dateTexte}</div>
+                            <div class="review-text">" Produit de qualité, très satisfait de ma commande. Excellent service client. "</div>
+                            <div style="margin-top:10px; font-weight:bold; color:var(--primary-color); font-size:0.9rem;">— Enseignant(e)</div>
+                        </div>
+                    `;
+                });
+            }
         }
 
         function voirDetails(index) {
