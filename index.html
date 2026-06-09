@@ -200,7 +200,7 @@
             switchSection('cart-section'); 
         }
 
-        function afficherCatalogue() {
+function afficherCatalogue() {
             let container = document.getElementById("catalog-container");
             container.innerHTML = "";
             
@@ -209,17 +209,24 @@
                 let desc = descriptions[index] || "Produit premium Journali";
                 let isPersonnalise = desc.toLowerCase().includes("personnalisé");
                 
+                // Si la variable stock n'existe pas dans la base, on considère qu'il y a du stock (ex: 1)
+                let stockActuel = (p.stock !== undefined) ? Number(p.stock) : 1; 
+                
                 // Logique de statut
                 let statutTxt = ""; let statutColor = ""; let statutBg = "";
+                
                 if(isPersonnalise) {
+                    // SEULS les articles personnalisés sont sur commande
                     statutTxt = "⚙️ Sur commande / حسب الطلب"; statutColor = "#d35400"; statutBg = "#fdebd0";
-                } else if (p.stock > 0) {
+                } else if (stockActuel > 0) {
+                    // Les autres sont en stock
                     statutTxt = "✅ En stock / متوفر"; statutColor = "#27ae60"; statutBg = "#d5f5e3";
                 } else {
+                    // Rupture de stock si ce n'est pas personnalisé et que le stock est explicitement à 0
                     statutTxt = "❌ Rupture de stock / نفذت الكمية"; statutColor = "#c0392b"; statutBg = "#fadbd8";
                 }
 
-                // Logique Bestseller (comparaison par nom)
+                // Logique Bestseller
                 let bestsellerHTML = (idBestseller === p.nom) ? `<div class="bestseller-badge">🔥 BESTSELLER</div>` : "";
 
                 container.innerHTML += `
@@ -239,7 +246,12 @@
             let p = produitsGlobaux[index];
             let imgUrl = images[index] || "https://via.placeholder.com/250";
             let desc = descriptions[index];
-            let isRupture = !desc.toLowerCase().includes("personnalisé") && p.stock <= 0;
+            
+            let isPersonnalise = desc.toLowerCase().includes("personnalisé");
+            let stockActuel = (p.stock !== undefined) ? Number(p.stock) : 1; 
+            
+            // Désactiver le bouton d'achat uniquement s'il n'est PAS personnalisé ET que le stock est à 0
+            let isRupture = !isPersonnalise && stockActuel <= 0;
 
             let btnAjout = isRupture 
                 ? `<button class="btn-action" style="background:#ccc; cursor:not-allowed;" disabled>Rupture de stock</button>`
