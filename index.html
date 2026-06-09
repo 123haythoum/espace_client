@@ -200,7 +200,7 @@
             switchSection('cart-section'); 
         }
 
-function afficherCatalogue() {
+        function afficherCatalogue() {
             let container = document.getElementById("catalog-container");
             container.innerHTML = "";
             
@@ -212,7 +212,7 @@ function afficherCatalogue() {
                 // Si la variable stock n'existe pas dans la base, on considère qu'il y a du stock (ex: 1)
                 let stockActuel = (p.stock !== undefined) ? Number(p.stock) : 1; 
                 
-                // Logique de statut
+                // Logique de statut stricte
                 let statutTxt = ""; let statutColor = ""; let statutBg = "";
                 
                 if(isPersonnalise) {
@@ -226,7 +226,7 @@ function afficherCatalogue() {
                     statutTxt = "❌ Rupture de stock / نفذت الكمية"; statutColor = "#c0392b"; statutBg = "#fadbd8";
                 }
 
-                // Logique Bestseller
+                // Logique Bestseller (comparaison par nom)
                 let bestsellerHTML = (idBestseller === p.nom) ? `<div class="bestseller-badge">🔥 BESTSELLER</div>` : "";
 
                 container.innerHTML += `
@@ -396,9 +396,22 @@ function afficherCatalogue() {
                 alert("Veuillez sélectionner un nombre d'étoiles avant d'envoyer.");
                 return;
             }
-            alert(`Merci pour votre retour positif de ${noteSelectionnee} étoiles ! ✨`);
-            // Retour au catalogue après évaluation
-            location.reload(); 
+
+            // Création de l'objet avis
+            const avisData = {
+                date: new Date().toLocaleString('fr-FR'),
+                note: noteSelectionnee,
+                message: "Avis client post-commande"
+            };
+
+            // Envoi vers Firebase dans le dossier "avis"
+            db.ref("data_magasin/avis").push(avisData).then(() => {
+                alert(`Merci pour votre retour de ${noteSelectionnee} étoiles ! ✨`);
+                // Retour au catalogue après évaluation
+                location.reload(); 
+            }).catch(err => {
+                alert("Une erreur est survenue lors de l'envoi de votre avis.");
+            });
         }
     </script>
 </body>
