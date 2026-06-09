@@ -3,66 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boutique Journali</title>
-    <!-- Favicon -->
+    <title>Boutique Journali - Espace Enseignants</title>
     <link rel="icon" type="image/jpeg" href="https://scontent.ftun1-2.fna.fbcdn.net/v/t39.30808-6/692143067_122160380720960850_6444198521542776975_n.jpg?stp=dst-jpg_tt6&cstp=mx1024x1024&ctp=s1024x1024&_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dAR5ynhJUcYQ7kNvwGCOj9Q&_nc_oc=AdryRU6kswtiTv0wSudUTFBYuQJ5NEgTc_uz7quSs0WJCJRyvjjZqJGm4cZM2JULy-s&_nc_zt=23&_nc_ht=scontent.ftun1-2.fna&_nc_gid=PhGPiH7gARf7VBEkCSSJ6A&_nc_ss=7b2a8&oh=00_Af8WKipmsYuHVea3XZyYhhgNl9dWu6bMo8I_Ab6bqOZklw&oe=6A2C75EA">
     
-    <!-- Scripts Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     
     <style>
         :root { --primary-color: #2c3e50; --secondary-color: #e67e22; --bg-color: #f4f6f9; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background-color: var(--bg-color); color: #333; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        body { background-color: var(--bg-color); color: #333; display: flex; flex-direction: column; align-items: center; padding: 20px; padding-bottom: 80px;}
         
-        .header { text-align: center; margin-bottom: 30px; }
+        .header { text-align: center; margin-bottom: 20px; width: 100%; max-width: 900px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: relative;}
         .header h1 { color: var(--primary-color); letter-spacing: 2px; }
+        .welcome-msg { color: #27ae60; font-weight: 600; margin-top: 10px; font-size: 1.1rem;}
+        .instructions { font-size: 0.9rem; color: #7f8c8d; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;}
         
-        #catalog-section { width: 100%; max-width: 900px; }
-        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .product-card { background: white; border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 6px 15px rgba(0,0,0,0.05); transition: 0.3s; }
-        .product-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
-        .product-name { font-weight: bold; color: var(--primary-color); margin-bottom: 5px; }
-        .product-price { color: var(--secondary-color); font-weight: bold; margin-bottom: 10px; }
-        
-        .btn-buy { background-color: var(--primary-color); color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; cursor: pointer; }
-        .btn-buy:hover { background-color: var(--secondary-color); }
+        .cart-btn { position: absolute; top: 20px; right: 20px; background: var(--secondary-color); color: white; border: none; padding: 10px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s;}
+        .cart-btn:hover { background: #d35400; transform: scale(1.05);}
 
-        .order-card { background: white; width: 100%; max-width: 500px; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); display: none; }
-        .form-group { margin-bottom: 15px; }
-        input, textarea, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-        .btn-submit { background-color: var(--secondary-color); color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .bestseller-badge { position: absolute; top: 10px; left: 10px; background: #f1c40f; color: #8e44ad; font-weight: bold; padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 2;}
+
+        .section { width: 100%; max-width: 900px; display: none; }
+        .section.active { display: block; }
+        
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .product-card { background: white; border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 6px 15px rgba(0,0,0,0.05); transition: 0.3s; position: relative;}
+        .product-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+        .product-name { font-weight: bold; color: var(--primary-color); margin-bottom: 5px; font-size: 1.1rem;}
+        .product-price { color: var(--secondary-color); font-weight: bold; margin-bottom: 10px; font-size: 1.2rem;}
+        .stock-status { font-size: 0.85rem; font-weight: bold; margin-bottom: 15px; padding: 4px; border-radius: 4px;}
+        
+        .btn-action { background-color: var(--primary-color); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s;}
+        .btn-action:hover { background-color: var(--secondary-color); }
+        .btn-back { background: none; border: none; color: var(--primary-color); font-weight: bold; cursor: pointer; margin-bottom: 20px; font-size: 1rem;}
+
+        /* Page Détails */
+        .detail-view { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); display: flex; gap: 30px; flex-wrap: wrap;}
+        .detail-img { flex: 1; min-width: 250px; }
+        .detail-img img { width: 100%; border-radius: 8px; }
+        .detail-info { flex: 2; min-width: 250px; text-align: left; }
+        .detail-info h2 { color: var(--primary-color); margin-bottom: 10px; }
+        .detail-info .desc { color: #555; line-height: 1.6; margin-bottom: 20px; background: #f9f9f9; padding: 15px; border-left: 4px solid var(--secondary-color); border-radius: 4px;}
+        
+        /* Panier & Commande */
+        .cart-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .cart-table th, .cart-table td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; }
+        .form-group { margin-bottom: 15px; text-align: left;}
+        input, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-family: inherit;}
+        .checkout-box { background: #f9f9f9; padding: 20px; border-radius: 8px; margin-top: 20px; border: 1px solid #e0e0e0;}
+
+        /* Feedback Stars */
+        .stars { font-size: 2rem; color: #ccc; cursor: pointer; margin: 15px 0;}
+        .stars span.active { color: #f1c40f; }
+
+        /* Footer Contact */
+        .footer { margin-top: 40px; text-align: center; color: #7f8c8d; font-size: 0.9rem; padding: 20px; background: white; width: 100%; max-width: 900px; border-radius: 12px;}
+        .footer a { color: var(--secondary-color); text-decoration: none; font-weight: bold;}
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>JOURNALI</h1>
+        <div class="welcome-msg">
+            Chers enseignants, bienvenue ! / مرحباً بكم أساتذتنا الكرام !<br>
+            <span style="font-size:0.9rem; color:#555; font-weight:normal;">Nous sommes honorés de vous accompagner dans votre noble mission. / يشرفنا مرافقتكم في رسالتكم النبيلة.</span>
+        </div>
+        <div class="instructions">
+            🇫🇷 Choisissez vos articles, ajoutez-les au panier, et validez votre commande. Paiement à la livraison.<br>
+            🇹🇳 اختر منتجاتك، أضفها إلى السلة، ثم أكد طلبك. الدفع عند الاستلام.
+        </div>
+        <button class="cart-btn" onclick="ouvrirPanier()">🛒 Panier (<span id="cart-count">0</span>)</button>
     </div>
 
-    <div id="catalog-section">
-        <div class="catalog-grid" id="catalog-container"></div>
+    <div id="catalog-section" class="section active">
+        <div class="catalog-grid" id="catalog-container">
+            </div>
     </div>
 
-    <div id="form-section" class="order-card">
-        <button onclick="location.reload()" style="margin-bottom:15px; cursor:pointer;">⬅ Retour au catalogue</button>
-        <div id="form-content">
-            <h2>Finaliser la commande</h2>
-            <form id="client-form" onsubmit="envoyerCommande(event)">
-                <div class="form-group"><input type="text" id="client-nom" placeholder="Nom et Prénom" required></div>
-                <div class="form-group"><input type="tel" id="client-tel" placeholder="Téléphone" required></div>
-                <div class="form-group"><textarea id="client-adresse" placeholder="Adresse de livraison" required></textarea></div>
-                <div class="form-group"><select id="client-produit" disabled style="background-color: #eee;"></select></div>
-                <div class="form-group"><input type="number" id="client-qty" value="1" min="1" required></div>
-                <button type="submit" class="btn-submit">Confirmer la commande</button>
-            </form>
+    <div id="details-section" class="section">
+        <button class="btn-back" onclick="retourCatalogue()">⬅ Retour au catalogue / العودة</button>
+        <div class="detail-view" id="detail-container">
+            </div>
+    </div>
+
+    <div id="cart-section" class="section">
+        <button class="btn-back" onclick="retourCatalogue()">⬅ Continuer mes achats / مواصلة التسوق</button>
+        <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
+            <h2 style="color:var(--primary-color); margin-bottom: 20px;">Votre Panier / سلة المشتريات</h2>
+            <div id="cart-items-container"></div>
+            
+            <div class="checkout-box" id="checkout-box" style="display:none;">
+                <h3 style="margin-bottom: 15px; border-bottom: 2px solid var(--secondary-color); padding-bottom: 5px;">Finaliser la commande</h3>
+                <form id="client-form" onsubmit="envoyerCommande(event)">
+                    <div class="form-group"><input type="text" id="client-nom" placeholder="Nom et Prénom / الإسم و اللقب" required></div>
+                    <div class="form-group"><input type="tel" id="client-tel" placeholder="Téléphone / رقم الهاتف" required></div>
+                    <div class="form-group"><textarea id="client-adresse" placeholder="Adresse exacte de livraison / عنوان التوصيل" required></textarea></div>
+                    
+                    <p style="font-size: 0.9rem; color: #e74c3c; font-weight: bold; margin-bottom: 15px;">
+                        🚚 Frais de livraison (estimés entre 7 et 10 DT selon région) : 8.00 DT par défaut.
+                    </p>
+                    
+                    <button type="submit" class="btn-action" style="font-size:1.1rem;">✅ Confirmer la commande / تأكيد الطلب</button>
+                </form>
+            </div>
         </div>
-        <!-- Message de succès -->
-        <div id="success-msg" style="display:none; text-align:center; padding:20px;">
-            <h3 style="color:green; margin-bottom:10px;">✅ Commande envoyée !</h3>
-            <p>Votre commande sera bientôt confirmée. Attendez notre appel.</p>
+    </div>
+
+    <div id="success-section" class="section" style="text-align: center; background: white; padding: 40px; border-radius: 12px;">
+        <h2 style="color: green; margin-bottom: 15px;">✅ Commande envoyée avec succès !</h2>
+        <p style="color: #555; margin-bottom: 30px;">Nous vous contacterons très prochainement pour la confirmation. / سنتصل بك قريباً لتأكيد الطلب.</p>
+        
+        <div style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
+            <h3>Évaluez votre expérience sur notre site<br>قيم تجربتك في موقعنا</h3>
+            <div class="stars" id="star-rating">
+                <span onclick="noter(1)">★</span>
+                <span onclick="noter(2)">★</span>
+                <span onclick="noter(3)">★</span>
+                <span onclick="noter(4)">★</span>
+                <span onclick="noter(5)">★</span>
+            </div>
+            <button class="btn-action" style="width: auto; padding: 10px 30px;" onclick="envoyerFeedback()">Envoyer / إرسال</button>
         </div>
+    </div>
+
+    <div class="footer">
+        <p>📞 Contact : 25801167 / 29148042</p>
+        <p>📱 Rejoignez-nous sur <a href="https://www.facebook.com/profile.php?id=61578825508841" target="_blank">Notre Page Facebook</a></p>
+        <p style="margin-top: 10px; font-size: 0.8rem; opacity: 0.7;">© 2026 Journali - Tous droits réservés.</p>
     </div>
 
     <script>
@@ -82,45 +151,242 @@
             "https://github.com/123haythoum/espace_client/blob/main/images/6.jpg?raw=true"
         ];
 
-        db.ref("data_magasin/inventaire").once("value", (snapshot) => {
+        const descriptions = [
+            "Journal de classe arabe ou français / A4 / 200 pages / thème: au choix / qualité premium / reliure spirale métallique / élaboré et réalisé par des enseignants aux écoles étatiques.",
+            "Journal de classe arabe ou français / A4 / 200 pages / thème: personnalisé / qualité premium / reliure spirale métallique / nom et école personnalisés / élaboré et réalisé par des enseignants aux écoles étatiques.",
+            "Cahier de roulement avec couverture rigide et spirale métallique / 100 pages / thème: au choix.",
+            "Cahier de roulement avec couverture rigide et spirale métallique / 100 pages / thème: personnalisé.",
+            "Agenda / A5 / reliure spirale métallique / couverture rigide / thème: au choix.",
+            "Agenda / taille au choix / reliure spirale métallique / couverture rigide / thème: personnalisé."
+        ];
+
+        let produitsGlobaux = [];
+        let panier = [];
+        let idBestseller = null;
+
+        // Initialisation : Calcul du Bestseller puis affichage du catalogue
+        db.ref("data_magasin").once("value", (snapshot) => {
             const data = snapshot.val();
+            
+            // 1. Déterminer le bestseller depuis l'historique des ventes
+            if(data.ventes) {
+                let ventesList = Array.isArray(data.ventes) ? data.ventes : Object.values(data.ventes);
+                let comptage = {};
+                ventesList.forEach(v => {
+                    if(v && v.nom) { comptage[v.nom] = (comptage[v.nom] || 0) + Number(v.quantite); }
+                });
+                let maxQty = 0;
+                for(let nom in comptage) {
+                    if(comptage[nom] > maxQty) { maxQty = comptage[nom]; idBestseller = nom; }
+                }
+            }
+
+            // 2. Charger l'inventaire
+            if(data.inventaire) {
+                produitsGlobaux = data.inventaire.filter(p => p != null);
+                afficherCatalogue();
+            }
+        });
+
+        function switchSection(sectionId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function retourCatalogue() { switchSection('catalog-section'); }
+        function ouvrirPanier() { 
+            afficherContenuPanier(); 
+            switchSection('cart-section'); 
+        }
+
+        function afficherCatalogue() {
             let container = document.getElementById("catalog-container");
-            data.forEach((p, index) => {
+            container.innerHTML = "";
+            
+            produitsGlobaux.forEach((p, index) => {
                 let imgUrl = images[index] || "https://via.placeholder.com/250";
+                let desc = descriptions[index] || "Produit premium Journali";
+                let isPersonnalise = desc.toLowerCase().includes("personnalisé");
+                
+                // Logique de statut
+                let statutTxt = ""; let statutColor = ""; let statutBg = "";
+                if(isPersonnalise) {
+                    statutTxt = "⚙️ Sur commande / حسب الطلب"; statutColor = "#d35400"; statutBg = "#fdebd0";
+                } else if (p.stock > 0) {
+                    statutTxt = "✅ En stock / متوفر"; statutColor = "#27ae60"; statutBg = "#d5f5e3";
+                } else {
+                    statutTxt = "❌ Rupture de stock / نفذت الكمية"; statutColor = "#c0392b"; statutBg = "#fadbd8";
+                }
+
+                // Logique Bestseller (comparaison par nom)
+                let bestsellerHTML = (idBestseller === p.nom) ? `<div class="bestseller-badge">🔥 BESTSELLER</div>` : "";
+
                 container.innerHTML += `
                     <div class="product-card">
+                        ${bestsellerHTML}
                         <img src="${imgUrl}">
                         <div class="product-name">${p.nom}</div>
-                        <div class="product-price">${p.prix} DT</div>
-                        <button class="btn-buy" onclick="commander('${p.id}', '${p.nom}')">Acheter</button>
+                        <div class="product-price">${Number(p.prix).toFixed(2)} DT</div>
+                        <div class="stock-status" style="color:${statutColor}; background:${statutBg}">${statutTxt}</div>
+                        <button class="btn-action" onclick="voirDetails(${index})">🔍 Détails & Achat</button>
                     </div>
                 `;
             });
-        });
+        }
 
-        function commander(id, nom) {
-            document.getElementById("catalog-section").style.display = "none";
-            document.getElementById("form-section").style.display = "block";
-            let select = document.getElementById("client-produit");
-            select.innerHTML = `<option value="${id}">${nom}</option>`;
+        function voirDetails(index) {
+            let p = produitsGlobaux[index];
+            let imgUrl = images[index] || "https://via.placeholder.com/250";
+            let desc = descriptions[index];
+            let isRupture = !desc.toLowerCase().includes("personnalisé") && p.stock <= 0;
+
+            let btnAjout = isRupture 
+                ? `<button class="btn-action" style="background:#ccc; cursor:not-allowed;" disabled>Rupture de stock</button>`
+                : `<div style="display:flex; gap:10px; margin-top:20px;">
+                     <input type="number" id="qty-add" value="1" min="1" style="width: 80px; text-align:center;">
+                     <button class="btn-action" onclick="ajouterAuPanier(${index})">🛒 Ajouter au panier</button>
+                   </div>`;
+
+            document.getElementById("detail-container").innerHTML = `
+                <div class="detail-img"><img src="${imgUrl}"></div>
+                <div class="detail-info">
+                    <h2>${p.nom}</h2>
+                    <div class="product-price" style="font-size:1.5rem;">${Number(p.prix).toFixed(2)} DT</div>
+                    <div class="desc"><strong>Détails :</strong><br>${desc}</div>
+                    ${btnAjout}
+                </div>
+            `;
+            switchSection('details-section');
+        }
+
+        function ajouterAuPanier(index) {
+            let p = produitsGlobaux[index];
+            let qty = parseInt(document.getElementById("qty-add").value) || 1;
+            
+            // Vérifier si déjà dans le panier
+            let existant = panier.find(item => item.id === p.id);
+            if(existant) {
+                existant.qty += qty;
+            } else {
+                panier.push({ id: p.id, nom: p.nom, prix: Number(p.prix), qty: qty });
+            }
+            
+            mettreAJourBadge();
+            alert("✅ Produit ajouté au panier !");
+            retourCatalogue();
+        }
+
+        function mettreAJourBadge() {
+            let totalItems = panier.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById("cart-count").innerText = totalItems;
+        }
+
+        function supprimerDuPanier(id) {
+            panier = panier.filter(item => item.id !== id);
+            mettreAJourBadge();
+            afficherContenuPanier();
+        }
+
+        function afficherContenuPanier() {
+            let container = document.getElementById("cart-items-container");
+            let checkoutBox = document.getElementById("checkout-box");
+            
+            if(panier.length === 0) {
+                container.innerHTML = "<p style='text-align:center; color:#777;'>Votre panier est vide.</p>";
+                checkoutBox.style.display = "none";
+                return;
+            }
+
+            checkoutBox.style.display = "block";
+            let html = `<table class="cart-table">
+                            <thead><tr><th>Article</th><th>Qté</th><th>Prix U.</th><th>Total</th><th></th></tr></thead>
+                            <tbody>`;
+            
+            let sousTotal = 0;
+            panier.forEach(item => {
+                let ligneTotal = item.prix * item.qty;
+                sousTotal += ligneTotal;
+                html += `<tr>
+                            <td><strong>${item.nom}</strong></td>
+                            <td>${item.qty}</td>
+                            <td>${item.prix.toFixed(2)} DT</td>
+                            <td>${ligneTotal.toFixed(2)} DT</td>
+                            <td><button onclick="supprimerDuPanier('${item.id}')" style="background:none; border:none; color:red; cursor:pointer;">❌</button></td>
+                         </tr>`;
+            });
+            
+            let fraisLivraison = 8.00;
+            let totalGeneral = sousTotal + fraisLivraison;
+
+            html += `</tbody></table>
+                     <div style="text-align:right; margin-top:20px; font-size:1.1rem;">
+                        <p>Sous-total : ${sousTotal.toFixed(2)} DT</p>
+                        <p style="color:var(--secondary-color);">Livraison estimée : ${fraisLivraison.toFixed(2)} DT</p>
+                        <h2 style="margin-top:10px; color:var(--primary-color);">Total à payer : ${totalGeneral.toFixed(2)} DT</h2>
+                     </div>`;
+                     
+            container.innerHTML = html;
         }
 
         function envoyerCommande(e) {
             e.preventDefault();
-            const cmd = {
-                date: new Date().toLocaleString(),
-                client: document.getElementById("client-nom").value,
-                telephone: document.getElementById("client-tel").value,
-                adresse: document.getElementById("client-adresse").value,
-                article: document.getElementById("client-produit").options[0].text,
-                idArticle: document.getElementById("client-produit").value,
-                quantite: document.getElementById("client-qty").value
-            };
+            if(panier.length === 0) return;
+
+            let nomClient = document.getElementById("client-nom").value;
+            let telClient = document.getElementById("client-tel").value;
+            let adresseClient = document.getElementById("client-adresse").value;
+            let dateCmd = new Date().toLocaleString('fr-FR');
+
+            // Afin de garder la compatibilité avec le système de gestion de stock de l'Admin,
+            // nous envoyons chaque ligne du panier comme une commande distincte, 
+            // mais nous lions les frais de livraison à la toute première ligne.
             
-            db.ref("data_magasin/commandes").push(cmd).then(() => {
-                document.getElementById("form-content").style.display = "none";
-                document.getElementById("success-msg").style.display = "block";
+            let promesses = panier.map((item, index) => {
+                let totalLigne = item.prix * item.qty;
+                if(index === 0) totalLigne += 8; // Ajout des frais de livraison sur la 1ère ligne pour la compta Admin
+
+                const cmd = {
+                    date: dateCmd,
+                    client: nomClient,
+                    telephone: telClient,
+                    adresse: adresseClient + (index === 0 ? " (Inclut frais livraison 8DT)" : ""),
+                    article: item.nom,
+                    idArticle: item.id, // Utilisé par l'admin pour déduire le stock
+                    quantite: item.qty,
+                    total: totalLigne
+                };
+                return db.ref("data_magasin/commandes").push(cmd);
             });
+
+            Promise.all(promesses).then(() => {
+                panier = [];
+                mettreAJourBadge();
+                switchSection('success-section');
+            }).catch(err => {
+                alert("Erreur lors de l'envoi de la commande. Veuillez réessayer.");
+            });
+        }
+
+        // --- Système de Feedback ---
+        let noteSelectionnee = 0;
+        function noter(etoiles) {
+            noteSelectionnee = etoiles;
+            let spans = document.querySelectorAll('#star-rating span');
+            spans.forEach((span, idx) => {
+                if(idx < etoiles) span.classList.add('active');
+                else span.classList.remove('active');
+            });
+        }
+
+        function envoyerFeedback() {
+            if(noteSelectionnee === 0) {
+                alert("Veuillez sélectionner un nombre d'étoiles avant d'envoyer.");
+                return;
+            }
+            alert(`Merci pour votre retour positif de ${noteSelectionnee} étoiles ! ✨`);
+            // Retour au catalogue après évaluation
+            location.reload(); 
         }
     </script>
 </body>
