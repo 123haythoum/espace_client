@@ -4,8 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boutique Journali - Espace Enseignants</title>
-    <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="https://scontent.ftun1-2.fna.fbcdn.net/v/t39.30808-6/692143067_122160380720960850_6444198521542776975_n.jpg?stp=dst-jpg_tt6&cstp=mx1024x1024&ctp=s1024x1024&_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dAR5ynhJUcYQ7kNvwGCOj9Q&_nc_oc=AdryRU6kswtiTv0wSudUTFBYuQJ5NEgTc_uz7quSs0WJCJRyvjjZqJGm4cZM2JULy-s&_nc_zt=23&_nc_ht=scontent.ftun1-2.fna&_nc_gid=PhGPiH7gARf7VBEkCSSJ6A&_nc_ss=7b2a8&oh=00_Af8WKipmsYuHVea3XZyYhhgNl9dWu6bMo8I_Ab6bqOZklw&oe=6A2C75EA">
+    
+    <!-- Balises Open Graph pour Facebook & Instagram (Aperçu du lien) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Boutique Journali - Espace Enseignants">
+    <meta property="og:description" content="Chers enseignants, bienvenue dans votre espace client Journali. Commandez vos outils pédagogiques premium.">
+    <meta property="og:image" content="https://github.com/123haythoum/espace_client/blob/main/images/7.jpg?raw=true">
+    <meta property="og:image:type" content="image/jpeg">
+    
+    <!-- Balises Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Boutique Journali - Espace Enseignants">
+    <meta name="twitter:description" content="Chers enseignants, bienvenue dans votre espace client Journali. Commandez vos outils pédagogiques premium.">
+    <meta name="twitter:image" content="https://github.com/123haythoum/espace_client/blob/main/images/7.jpg?raw=true">
+
+    <!-- Favicon / Logo de page -->
+    <link rel="icon" type="image/jpeg" href="https://github.com/123haythoum/espace_client/blob/main/images/7.jpg?raw=true">
     
     <!-- Scripts Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -17,6 +31,7 @@
         body { background-color: var(--bg-color); color: #333; display: flex; flex-direction: column; align-items: center; padding: 20px; padding-bottom: 80px;}
         
         .header { text-align: center; margin-bottom: 20px; width: 100%; max-width: 900px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: relative;}
+        .header-logo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         .header h1 { color: var(--primary-color); letter-spacing: 2px; }
         .welcome-msg { color: #27ae60; font-weight: 600; margin-top: 10px; font-size: 1.1rem;}
         .instructions { font-size: 0.9rem; color: #7f8c8d; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;}
@@ -76,10 +91,12 @@
 <body>
 
     <div class="header">
+        <!-- Logo de la marque Journali intégré au Header -->
+        <img src="https://github.com/123haythoum/espace_client/blob/main/images/7.jpg?raw=true" alt="Logo Journali" class="header-logo">
         <h1>JOURNALI</h1>
         <div class="welcome-msg">
             Chers enseignants, bienvenue ! / مرحباً بكم أساتذتنا الكرام !<br>
-            <span style="font-size:0.9rem; color:#555; font-weight:normal;">Nous sommes honorés de vous accompagner dans votre noble mission. / يشرفنا مرافقتكم في رسالتكم النبيلة.</span>
+            <span style="font-size:0.9rem; color:#555; font-weight:normal;">Nous sommes honorés de vous accompagner dans votre noble mission. / يشرفنا mrafqtkm في رسالتكم النبيلة.</span>
         </div>
         <div class="instructions">
             🇫🇷 Choisissez vos articles, ajoutez-les au panier, et validez votre commande. Paiement à la livraison.<br>
@@ -177,24 +194,24 @@
             "https://github.com/123haythoum/espace_client/blob/main/images/6.jpg?raw=true"
         ];
 
+        // Ordre mis à jour selon vos directives (produits personnalisés placés en premier pour chaque catégorie)
         const descriptions = [
-            "Journal de classe arabe ou français / A4 / 200 pages / thème: au choix / qualité premium / reliure spirale métallique / élaboré et réalisé par des enseignants aux écoles étatiques.",
-            "Journal de classe arabe ou français / A4 / 200 pages / thème: personnalisé / qualité premium / reliure spirale métallique / nom et école personnalisés / élaboré et réalisé par des enseignants aux écoles étatiques.",
-            "Cahier de roulement avec couverture rigide et spirale métallique / 100 pages / thème: au choix.",
-            "Cahier de roulement avec couverture rigide et spirale métallique / 100 pages / thème: personnalisé.",
-            "Agenda / A5 / reliure spirale métallique / couverture rigide / thème: au choix.",
-            "Agenda / taille au choix / reliure spirale métallique / couverture rigide / thème: personnalisé."
+            "Journal de classe arabe ou français / A4/ 200 pages / thème: personnalisé / qualité premium / reliure spirale métallique/ nom et école personnalisés/ élaboré et réalisé par des enseignants aux écoles étatiques.",
+            "Journal de classe arabe ou français / A4/ 200 pages / thème: au choix / qualité premium /reliure spirale métallique / élaboré et réalisé par des enseignants aux écoles étatiques.",
+            "cahier de roulement avec couverture rigide et spirale métallique / 100 pages / thème: personnalisé",
+            "cahier de roulement avec couverture rigide et spirale métallique / 100 pages / thème: au choix",
+            "agenda / taille au choix / reliure spirale métallique/ couverture rigide/ thème: personnalisé",
+            "agenda / A5 / reliure spirale métallique/ couverture rigide/ thème: au choix"
         ];
 
         let produitsGlobaux = [];
         let panier = [];
         let idBestseller = null;
 
-        // Initialisation : Calcul du Bestseller puis affichage du catalogue
+        // Initialisation : Calcul automatique du Bestseller selon l'historique des ventes
         db.ref("data_magasin").once("value", (snapshot) => {
             const data = snapshot.val();
             
-            // 1. Déterminer le bestseller depuis l'historique des ventes
             if(data.ventes) {
                 let ventesList = Array.isArray(data.ventes) ? data.ventes : Object.values(data.ventes);
                 let comptage = {};
@@ -207,20 +224,19 @@
                 }
             }
 
-            // 2. Charger l'inventaire
+            // Chargement dynamique de l'inventaire
             if(data.inventaire) {
                 produitsGlobaux = data.inventaire.filter(p => p != null);
                 afficherCatalogue();
             }
         });
 
-        // Charger les avis depuis Firebase (limite aux 8 derniers)
+        // Charger les avis depuis Firebase
         db.ref("data_magasin/avis").limitToLast(8).once("value", (snapshot) => {
             const avisData = snapshot.val();
             if(avisData) {
                 afficherAvis(avisData);
             } else {
-                // Si la base de données est vide, afficher des avis fictifs pour ne pas avoir une section vide
                 afficherAvisParDefaut();
             }
         });
@@ -244,26 +260,29 @@
             produitsGlobaux.forEach((p, index) => {
                 let imgUrl = images[index] || "https://via.placeholder.com/250";
                 let desc = descriptions[index] || "Produit premium Journali";
-                let isPersonnalise = desc.toLowerCase().includes("personnalisé");
                 
-                // Si la variable stock n'existe pas dans la base, on considère qu'il y a du stock (ex: 1)
+                // Détection stricte du mot "personnalisé" dans le nom ou la description
+                let isPersonnalise = p.nom.toLowerCase().includes("personnalisé") || desc.toLowerCase().includes("personnalisé");
                 let stockActuel = (p.stock !== undefined) ? Number(p.stock) : 1; 
+                let stockStr = String(p.stock || "").toLowerCase();
                 
-                // Logique de statut stricte
                 let statutTxt = ""; let statutColor = ""; let statutBg = "";
                 
                 if(isPersonnalise) {
-                    // SEULS les articles personnalisés sont sur commande
+                    // Les articles personnalisés affichent toujours "Sur commande"
                     statutTxt = "⚙️ Sur commande / حسب الطلب"; statutColor = "#d35400"; statutBg = "#fdebd0";
-                } else if (stockActuel > 0) {
-                    // Les autres sont en stock
-                    statutTxt = "✅ En stock / متوفر"; statutColor = "#27ae60"; statutBg = "#d5f5e3";
                 } else {
-                    // Rupture de stock si ce n'est pas personnalisé et que le stock est explicitement à 0
-                    statutTxt = "❌ Rupture de stock / نفذت الكمية"; statutColor = "#c0392b"; statutBg = "#fadbd8";
+                    // Logique dynamique pour produits standards selon l'état réel de la base
+                    if (stockStr.includes("commande") || p.stock === "sur commande") {
+                        statutTxt = "⚙️ Sur commande / حسب الطلب"; statutColor = "#d35400"; statutBg = "#fdebd0";
+                    } else if (stockActuel > 0) {
+                        statutTxt = "✅ En stock / متوفر"; statutColor = "#27ae60"; statutBg = "#d5f5e3";
+                    } else {
+                        statutTxt = "❌ Rupture de stock / نفذت الكمية"; statutColor = "#c0392b"; statutBg = "#fadbd8";
+                    }
                 }
 
-                // Logique Bestseller (comparaison par nom)
+                // Affichage constant du Bestseller de la marque calculé dynamiquement
                 let bestsellerHTML = (idBestseller === p.nom) ? `<div class="bestseller-badge">🔥 BESTSELLER</div>` : "";
 
                 container.innerHTML += `
@@ -282,8 +301,6 @@
         function afficherAvis(avisData) {
             let container = document.getElementById("reviews-container");
             let wrapper = document.getElementById("reviews-wrapper");
-            
-            // Convertir l'objet Firebase en tableau et l'inverser pour avoir les plus récents en premier
             let avisList = Object.values(avisData).reverse();
             
             if(avisList.length > 0) {
@@ -296,7 +313,6 @@
                     for(let i=1; i<=5; i++) {
                         etoilesHtml += (i <= note) ? "★" : "<span style='color:#ccc'>★</span>";
                     }
-                    
                     let dateTexte = avis.date ? avis.date.split(' ')[0] : "Récemment";
 
                     container.innerHTML += `
@@ -314,7 +330,6 @@
         function afficherAvisParDefaut() {
             let container = document.getElementById("reviews-container");
             let wrapper = document.getElementById("reviews-wrapper");
-            
             wrapper.style.display = "block";
             container.innerHTML = `
                 <div class="review-card">
@@ -337,14 +352,15 @@
             let imgUrl = images[index] || "https://via.placeholder.com/250";
             let desc = descriptions[index];
             
-            let isPersonnalise = desc.toLowerCase().includes("personnalisé");
+            let isPersonnalise = p.nom.toLowerCase().includes("personnalisé") || desc.toLowerCase().includes("personnalisé");
             let stockActuel = (p.stock !== undefined) ? Number(p.stock) : 1; 
+            let stockStr = String(p.stock || "").toLowerCase();
             
-            // Désactiver le bouton d'achat uniquement s'il n'est PAS personnalisé ET que le stock est à 0
-            let isRupture = !isPersonnalise && stockActuel <= 0;
+            // Un produit standard n'est considéré en rupture que si son stock est inférieur ou égal à 0 sans mention "commande"
+            let isRupture = !isPersonnalise && stockActuel <= 0 && !stockStr.includes("commande");
 
             let btnAjout = isRupture 
-                ? `<button class="btn-action" style="background:#ccc; cursor:not-allowed;" disabled>Rupture de stock</button>`
+                ? `<button class="btn-action" style="background:#ccc; cursor:not-allowed;" disabled>Rupture de stock / نفذت الكمية</button>`
                 : `<div style="display:flex; gap:10px; margin-top:20px;">
                      <input type="number" id="qty-add" value="1" min="1" style="width: 80px; text-align:center;">
                      <button class="btn-action" onclick="ajouterAuPanier(${index})">🛒 Ajouter au panier</button>
@@ -366,7 +382,6 @@
             let p = produitsGlobaux[index];
             let qty = parseInt(document.getElementById("qty-add").value) || 1;
             
-            // Vérifier si déjà dans le panier
             let existant = panier.find(item => item.id === p.id);
             if(existant) {
                 existant.qty += qty;
@@ -439,14 +454,10 @@
             let telClient = document.getElementById("client-tel").value;
             let adresseClient = document.getElementById("client-adresse").value;
             let dateCmd = new Date().toLocaleString('fr-FR');
-
-            // Afin de garder la compatibilité avec le système de gestion de stock de l'Admin,
-            // nous envoyons chaque ligne du panier comme une commande distincte, 
-            // mais nous lions les frais de livraison à la toute première ligne.
             
             let promesses = panier.map((item, index) => {
                 let totalLigne = item.prix * item.qty;
-                if(index === 0) totalLigne += 8; // Ajout des frais de livraison sur la 1ère ligne pour la compta Admin
+                if(index === 0) totalLigne += 8; // Conforme à l'organisation de la compta Admin interne
 
                 const cmd = {
                     date: dateCmd,
@@ -454,7 +465,7 @@
                     telephone: telClient,
                     adresse: adresseClient + (index === 0 ? " (Inclut frais livraison 8DT)" : ""),
                     article: item.nom,
-                    idArticle: item.id, // Utilisé par l'admin pour déduire le stock
+                    idArticle: item.id, 
                     quantite: item.qty,
                     total: totalLigne
                 };
@@ -487,17 +498,14 @@
                 return;
             }
 
-            // Création de l'objet avis
             const avisData = {
                 date: new Date().toLocaleString('fr-FR'),
                 note: noteSelectionnee,
                 message: "Avis client post-commande"
             };
 
-            // Envoi vers Firebase dans le dossier "avis"
             db.ref("data_magasin/avis").push(avisData).then(() => {
                 alert(`Merci pour votre retour de ${noteSelectionnee} étoiles ! ✨`);
-                // Retour au catalogue après évaluation
                 location.reload(); 
             }).catch(err => {
                 alert("Une erreur est survenue lors de l'envoi de votre avis.");
