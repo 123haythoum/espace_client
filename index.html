@@ -23,10 +23,13 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     
+    <!-- Balise de vérification Google Console conservée -->
+    <meta name="google-site-verification" content="d8bQdzvY4jfM4DQ6k_qb7ZJTxYt17O5OuXa3FIQ1xZY" />
+
     <style>
         :root { 
-            --primary-color: #1e3c72; /* Bleu profond élégant */
-            --secondary-color: #d35400; /* Terracotta chic */
+            --primary-color: #1e3c72; 
+            --secondary-color: #d35400; 
             --text-color: #2c3e50;
             --success-color: #27ae60;
             --danger-color: #c0392b;
@@ -41,7 +44,6 @@
             font-family: 'Poppins', 'Segoe UI', Tahoma, sans-serif; 
         }
 
-        /* Arrière-plan animé (Subtil et moderne) */
         body { 
             background: linear-gradient(-45deg, #f4f6f9, #e0eafc, #cfdef3, #fdfbfb);
             background-size: 400% 400%;
@@ -61,7 +63,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* En-tête effet Glassmorphism */
         .header { 
             text-align: center; 
             margin-bottom: 40px; 
@@ -116,6 +117,106 @@
         .section.active { display: block; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Styles pour les packs défilants */
+        .packs-marquee-container {
+            width: 100%;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--secondary-color), var(--warning-color));
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .packs-marquee-title {
+            text-align: center;
+            color: white;
+            margin-bottom: 15px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .packs-marquee {
+            display: flex;
+            gap: 20px;
+            width: max-content;
+            animation: scrollPacks 25s linear infinite;
+        }
+
+        .packs-marquee-container:hover .packs-marquee {
+            animation-play-state: paused;
+        }
+
+        @keyframes scrollPacks {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } 
+        }
+
+        .pack-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 460px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .pack-item img {
+            width: 90px;
+            height: 90px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid #f1f1f1;
+        }
+
+        .pack-item-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .pack-item-info h3 {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .pack-item-info p {
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.3;
+        }
+
+        .pack-item-price {
+            font-weight: 700;
+            color: var(--danger-color);
+            font-size: 1.15rem;
+            margin-top: 6px;
+        }
+
+        .btn-pack {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: 0.3s ease;
+        }
+
+        .btn-pack:hover {
+            background: #152b53;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.2);
+        }
 
         .catalog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
         
@@ -189,12 +290,18 @@
         .footer a:hover { color: var(--primary-color); }
 
         /* Responsive adjustments */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .header { padding: 20px; }
             .cart-btn { position: relative; top: 0; right: 0; margin-top: 15px; width: 100%; }
+            .pack-item {
+                min-width: 320px;
+                flex-direction: column;
+                text-align: center;
+            }
+            .pack-item-info { text-align: center; }
+            .btn-pack { width: 100%; margin-top: 10px; }
         }
     </style>
-    <meta name="google-site-verification" content="d8bQdzvY4jfM4DQ6k_qb7ZJTxYt17O5OuXa3FIQ1xZY" />
 </head>
 <body>
 
@@ -213,6 +320,56 @@
     </div>
 
     <div id="catalog-section" class="section active">
+        
+        <!-- Nouvelle section Packs Spéciaux défilants -->
+        <div class="packs-marquee-container">
+            <h2 class="packs-marquee-title">🌟 OFFRES SPÉCIALES RENTRÉE 🌟</h2>
+            <div class="packs-marquee">
+                <!-- Pack 1 -->
+                <div class="pack-item">
+                    <img src="https://github.com/123haythoum/espace_client/blob/main/images/ChatGPT%20Image%2016%20juin%202026,%2020_33_29.png?raw=true" alt="Pack Rentrée Sereine">
+                    <div class="pack-item-info">
+                        <h3>Pack Rentrée Sereine</h3>
+                        <p>1 journal standard + 2 cahiers de roulement standards</p>
+                        <div class="pack-item-price">50.00 DT</div>
+                    </div>
+                    <button class="btn-pack" onclick="ajouterPackAuPanier('pack_sereine', 'Pack Rentrée Sereine', 50)">🛒 Ajouter</button>
+                </div>
+                
+                <!-- Pack 2 -->
+                <div class="pack-item">
+                    <img src="https://github.com/123haythoum/espace_client/blob/main/images/ChatGPT%20Image%2016%20juin%202026,%2020_37_18.png?raw=true" alt="Pack Rentrée Elegance">
+                    <div class="pack-item-info">
+                        <h3>Pack Rentrée Elegance</h3>
+                        <p>1 journal standard + 1 cahier de roulement standard + 1 agenda standard</p>
+                        <div class="pack-item-price">45.00 DT</div>
+                    </div>
+                    <button class="btn-pack" onclick="ajouterPackAuPanier('pack_elegante', 'Pack Rentrée Elegance', 45)">🛒 Ajouter</button>
+                </div>
+
+                <!-- Duplication pour effet infini continu -->
+                <div class="pack-item">
+                    <img src="https://github.com/123haythoum/espace_client/blob/main/images/ChatGPT%20Image%2016%20juin%202026,%2020_33_29.png?raw=true" alt="Pack Rentrée Sereine">
+                    <div class="pack-item-info">
+                        <h3>Pack Rentrée Sereine</h3>
+                        <p>1 journal standard + 2 cahiers de roulement standards</p>
+                        <div class="pack-item-price">50.00 DT</div>
+                    </div>
+                    <button class="btn-pack" onclick="ajouterPackAuPanier('pack_sereine', 'Pack Rentrée Sereine', 50)">🛒 Ajouter</button>
+                </div>
+                
+                <div class="pack-item">
+                    <img src="https://github.com/123haythoum/espace_client/blob/main/images/ChatGPT%20Image%2016%20juin%202026,%2020_37_18.png?raw=true" alt="Pack Rentrée Elegance">
+                    <div class="pack-item-info">
+                        <h3>Pack Rentrée Elegance</h3>
+                        <p>1 journal standard + 1 cahier de roulement standard + 1 agenda standard</p>
+                        <div class="pack-item-price">45.00 DT</div>
+                    </div>
+                    <button class="btn-pack" onclick="ajouterPackAuPanier('pack_elegante', 'Pack Rentrée Elegance', 45)">🛒 Ajouter</button>
+                </div>
+            </div>
+        </div>
+
         <div class="catalog-grid" id="catalog-container">
             </div>
 
@@ -409,7 +566,7 @@
                         <div class="review-card">
                             <div class="review-stars">${etoilesHtml}</div>
                             <div class="review-date">${dateTexte}</div>
-                            <div class="review-text">" Produit de qualité, très satisfait de ma commande. Excellent service client. "</div>
+                            <div class="review-text">" Produit de qualité, très satisfait de my commande. Excellent service client. "</div>
                             <div style="margin-top:12px; font-weight:700; color:var(--primary-color); font-size:0.9rem;">— Enseignant(e)</div>
                         </div>
                     `;
@@ -481,6 +638,19 @@
             mettreAJourBadge();
             alert("✅ Produit ajouté au panier !");
             retourCatalogue();
+        }
+
+        // Nouvelle fonction JS pour ajouter directement les packs au panier
+        function ajouterPackAuPanier(id, nom, prix) {
+            let existant = panier.find(item => item.id === id);
+            if(existant) {
+                existant.qty += 1;
+            } else {
+                panier.push({ id: id, nom: nom, prix: Number(prix), qty: 1 });
+            }
+            
+            mettreAJourBadge();
+            alert("✅ " + nom + " ajouté au panier !");
         }
 
         function mettreAJourBadge() {
@@ -571,7 +741,6 @@
             });
         }
 
-        // --- Système de Feedback ---
         let noteSelectionnee = 0;
         function noter(etoiles) {
             noteSelectionnee = etoiles;
