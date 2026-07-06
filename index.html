@@ -95,7 +95,6 @@
         .welcome-msg { color: var(--success-color); font-weight: 600; margin-top: 15px; font-size: 1.15rem;}
         .instructions { font-size: 0.95rem; color: #555; margin-top: 15px; border-top: 1px solid #ddd; padding-top: 15px; line-height: 1.6;}
         
-        /* Conteneur des boutons d'en-tête (Compte & Panier) */
         .header-buttons {
             position: absolute; 
             top: 25px; right: 25px;
@@ -139,7 +138,6 @@
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Styles pour les packs défilants */
         .packs-marquee-container {
             width: 100%; overflow: hidden;
             background: linear-gradient(135deg, var(--secondary-color), var(--warning-color));
@@ -202,12 +200,19 @@
         /* Page Détails */
         .detail-view { background: var(--glass-bg); backdrop-filter: blur(10px); border-radius: 16px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; gap: 40px; flex-wrap: wrap;}
         .detail-img { flex: 1; min-width: 280px; }
-        .detail-img img { width: 100%; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1);}
+        .detail-img img { width: 100%; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); transition: 0.3s;}
         .detail-info { flex: 2; min-width: 280px; text-align: left; }
         .detail-info h2 { color: var(--primary-color); margin-bottom: 15px; font-size: 1.8rem;}
         .detail-info .desc { color: #555; line-height: 1.8; margin-bottom: 25px; background: rgba(255,255,255,0.6); padding: 20px; border-left: 5px solid var(--secondary-color); border-radius: 0 8px 8px 0;}
+        .detail-info .desc ul { padding-left: 20px; margin-top: 10px; margin-bottom: 10px; list-style-type: none; }
+        .detail-info .desc ul li { margin-bottom: 5px; }
+
+        /* Bloc Argumentaire Global */
+        .why-choose-us { background: #fff; padding: 20px; border-radius: 10px; border-top: 4px solid var(--warning-color); margin-top: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .why-choose-us h4 { color: var(--primary-color); font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .why-choose-us ul { list-style: none !important; padding-left: 0 !important; }
+        .why-choose-us ul li { margin-bottom: 8px; font-size: 0.95rem; }
         
-        /* Formulaires, Tableaux et Auth */
         .cart-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; background: white; border-radius: 8px; overflow: hidden; }
         .cart-table th { background: var(--primary-color); color: white; padding: 12px; text-align: left; }
         .cart-table td { padding: 15px 12px; text-align: left; border-bottom: 1px solid #eee; }
@@ -217,7 +222,6 @@
         input:focus, textarea:focus { outline: none; border-color: var(--secondary-color); box-shadow: 0 0 0 3px rgba(211, 84, 0, 0.1); }
         .checkout-box { background: white; padding: 30px; border-radius: 12px; margin-top: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);}
 
-        /* Reviews */
         .reviews-wrapper { margin-top: 60px; padding-top: 30px; border-top: 2px dashed rgba(0,0,0,0.1); width: 100%; }
         .reviews-wrapper h2 { color: var(--primary-color); text-align: center; margin-bottom: 30px; font-weight: 700;}
         .reviews-grid { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; scrollbar-width: thin; scrollbar-color: var(--secondary-color) #f1f1f1;}
@@ -226,17 +230,14 @@
         .review-date { font-size: 0.85rem; color: #999; margin-bottom: 12px;}
         .review-text { font-size: 1rem; color: #444; font-style: italic; line-height: 1.5;}
 
-        /* Etoiles cliquables */
         .stars { font-size: 2.5rem; color: #ddd; cursor: pointer; margin: 20px 0;}
         .stars span { transition: 0.2s; }
         .stars span.active, .stars span:hover { color: var(--warning-color); transform: scale(1.1); display: inline-block;}
 
-        /* Footer */
         .footer { margin-top: 50px; text-align: center; color: #7f8c8d; font-size: 0.95rem; padding: 25px; background: var(--glass-bg); width: 100%; max-width: 1000px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);}
         .footer a { color: var(--secondary-color); text-decoration: none; font-weight: 600; transition: color 0.3s;}
         .footer a:hover { color: var(--primary-color); }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .header { padding: 20px; }
             .header-buttons { position: relative; top: 0; right: 0; flex-direction: column; width: 100%; margin-top: 20px; }
@@ -329,7 +330,7 @@
     <div id="cart-section" class="section">
         <button class="btn-back" onclick="retourCatalogue()">⬅ Continuer mes achats</button>
         <div style="background: var(--glass-bg); backdrop-filter: blur(10px); padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-            <h2 style="color:var(--primary-color); margin-bottom: 25px; font-weight: 700;">Votre Panier / سلة المشتريات</h2>
+            <h2 style="color:var(--primary-color); margin-bottom: 25px; font-weight: 700;">Votre Panier / سلة Mots-clés</h2>
             <div id="cart-items-container"></div>
             
             <div class="checkout-box" id="checkout-box" style="display:none;">
@@ -412,19 +413,16 @@
     </div>
 
     <script>
-        // CONFIGURATION FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyCDV63W3AlfDr-99apHpktPidgpFurh96g",
             databaseURL: "https://journali-a0171-default-rtdb.europe-west1.firebasedatabase.app"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const auth = firebase.auth(); // Initialisation de l'authentification
+        const auth = firebase.auth(); 
         
-        // --- LOGIQUE D'AUTHENTIFICATION (COMPTE UTILISATEUR) ---
         let isLoginMode = true;
 
-        // Écouteur de changement d'état (connecté/déconnecté)
         auth.onAuthStateChanged(user => {
             const btnText = document.getElementById("account-btn-text");
             if(user) {
@@ -434,13 +432,11 @@
             }
         });
 
-        function ouvrirEspaceCompte() {
+        function abrirEspaceCompte() {
             if (auth.currentUser) {
-                // Utilisateur déjà connecté, on ouvre son espace
                 document.getElementById('account-email').innerText = auth.currentUser.email;
                 switchSection('account-section');
             } else {
-                // Pas connecté, on ouvre le formulaire de connexion
                 switchSection('auth-section');
             }
         }
@@ -459,21 +455,19 @@
             const pass = document.getElementById('auth-pass').value;
 
             if (isLoginMode) {
-                // Logique de Connexion
                 auth.signInWithEmailAndPassword(email, pass)
                     .then((userCredential) => {
                         alert("Bienvenue dans votre espace !");
-                        ouvrirEspaceCompte();
+                        abrirEspaceCompte();
                     })
                     .catch((error) => {
-                        alert("Erreur de connexion : " + error.message + "\n\n(Avez-vous bien activé l'authentification Email/Mot de passe dans votre console Firebase ?)");
+                        alert("Erreur de connexion : " + error.message);
                     });
             } else {
-                // Logique d'Inscription
                 auth.createUserWithEmailAndPassword(email, pass)
                     .then((userCredential) => {
                         alert("Compte créé avec succès ! Bienvenue !");
-                        ouvrirEspaceCompte();
+                        abrirEspaceCompte();
                     })
                     .catch((error) => {
                         alert("Erreur lors de l'inscription : " + error.message);
@@ -489,10 +483,7 @@
                 alert("Erreur lors de la déconnexion.");
             });
         }
-        // --- FIN LOGIQUE AUTH ---
 
-
-        // --- LOGIQUE CATALOGUE ET PANIER ---
         const images = [
             "https://github.com/123haythoum/espace_client/blob/main/images/1.png?raw=true",
             "https://github.com/123haythoum/espace_client/blob/main/images/2.png?raw=true",
@@ -502,13 +493,30 @@
             "https://github.com/123haythoum/espace_client/blob/main/images/6.png?raw=true"
         ];
 
+        // 1. MISES À JOUR DES DESCRIPTIONS PROFESSIONNELLES
         const descriptions = [
-            "Journal de classe arabe ou français / A4 / 200 pages / thème: personnalisé / qualité premium / reliure spirale métallique / nom et école personnalisés / élaboré et réalisé par des enseignants aux écoles étatiques.",
-            "Journal de classe arabe ou français / A4 / 200 pages / thème: au choix / qualité premium / reliure spirale métallique / élaboré et réalisé par des enseignants aux écoles étatiques.",
-            "Cahier de roulement avec couverture rigide et spirale métallique / 100 pages / thème: personnalisé",
-            "Cahier de roulement avec couverture rigide et spirale métallique / 100 pages / thème: au choix",
-            "Agenda / taille au choix / reliure spirale métallique / couverture rigide / thème: personnalisé",
-            "Agenda / A5 / reliure spirale métallique / couverture rigide / thème: au choix"
+            `<strong>Format : A4 (21 × 29,7 cm)</strong><br><br>Transformez votre journal de classe en un outil élégant, pratique et entièrement à votre image.<br><br>Notre <strong>Journal de classe personnalisé</strong> est conçu spécialement pour les enseignants souhaitant allier organisation, qualité et esthétique. Chaque couverture est personnalisée avec votre nom, votre établissement ou tout autre texte de votre choix, pour un produit unique.<br><br><strong>Caractéristiques :</strong><ul><li>✔ Format A4 pratique pour un confort d'écriture optimal.</li><li>✔ Couverture rigide haut de gamme.</li><li>✔ Personnalisation complète de la couverture.</li><li>✔ Reliure spirale métallique robuste permettant une ouverture à 360°.</li><li>✔ Impression couleur haute définition.</li><li>✔ Papier de qualité pour une écriture agréable.</li><li>✔ Conçu pour résister à une année scolaire complète.</li></ul><br><strong>Idéal pour :</strong><ul><li>• Enseignants du primaire</li><li>• Enseignants du collège</li><li>• Enseignants du secondaire</li><li>• Éducateurs et formateurs</li></ul><br><em>Un journal unique qui reflète votre personnalité tout en facilitant votre organisation quotidienne.</em>`,
+            
+            `<strong>Format : A4 (21 × 29,7 cm)</strong><br><br>Le <strong>Journal de classe Standard</strong> offre une présentation soignée, professionnelle et prête à l'emploi.<br><br>Conçu pour répondre aux besoins quotidiens des enseignants, il permet de planifier efficacement les séances, suivre les progressions et organiser toute l'année scolaire.<br><br><strong>Caractéristiques :</strong><ul><li>✔ Format A4.</li><li>✔ Couverture rigide élégante.</li><li>✔ Reliure spirale métallique résistante.</li><li>✔ Impression haute qualité.</li><li>✔ Papier épais pour une meilleure durabilité.</li><li>✔ Grande facilité d'utilisation.</li><li>✔ Produit disponible immédiatement.</li></ul><br><strong>Convient parfaitement à :</strong><ul><li>• Tous les enseignants</li><li>• Écoles publiques et privées</li><li>• Centres de formation</li></ul><br><em>La solution idéale pour une organisation simple, efficace et professionnelle.</em>`,
+            
+            `<strong>Format : B5 (17,6 × 25 cm)</strong><br><br>Le <strong>Cahier de roulement personnalisé</strong> est indispensable pour assurer le suivi administratif et pédagogique des classes.<br><br>Personnalisez la couverture selon vos envies afin d'obtenir un cahier unique qui vous accompagnera tout au long de l'année scolaire.<br><br><strong>Caractéristiques :</strong><ul><li>✔ Format B5 pratique.</li><li>✔ Couverture rigide personnalisable.</li><li>✔ Reliure spirale métallique.</li><li>✔ Impression couleur de haute qualité.</li><li>✔ Papier premium.</li><li>✔ Solide et durable.</li><li>✔ Personnalisation du nom, de l'école ou du texte.</li></ul><br><strong>Idéal pour :</strong><ul><li>• Le suivi des remplacements.</li><li>• Les informations administratives.</li><li>• La communication entre enseignants.</li><li>• Le suivi quotidien de la classe.</li></ul><br><em>Un cahier pratique, élégant et entièrement personnalisé.</em>`,
+            
+            `<strong>Format : B5 (17,6 × 25 cm)</strong><br><br>Simple, robuste et fonctionnel, le <strong>Cahier de roulement Standard</strong> accompagne les enseignants dans la gestion quotidienne de leur classe.<br><br>Sa conception soignée garantit une excellente résistance à une utilisation intensive.<br><br><strong>Caractéristiques :</strong><ul><li>✔ Format B5.</li><li>✔ Couverture rigide.</li><li>✔ Reliure spirale métallique.</li><li>✔ Impression professionnelle.</li><li>✔ Papier de qualité supérieure.</li><li>✔ Disponible immédiatement.</li></ul><br><strong>Utilisations :</strong><ul><li>• Transmission des informations.</li><li>• Organisation pédagogique.</li><li>• Suivi administratif.</li><li>• Notes quotidiennes.</li></ul><br><em>Le compagnon indispensable de chaque enseignant.</em>`,
+            
+            `<strong>Format : 12 × 16 cm</strong><br><br>Compact, élégant et entièrement personnalisable, notre <strong>Agenda personnalisé</strong> vous accompagne partout.<br><br>Grâce à son format pratique, il se glisse facilement dans un sac ou une pochette tout en offrant suffisamment d'espace pour organiser vos journées.<br><br><strong>Caractéristiques :</strong><ul><li>✔ Format compact : 12 × 16 cm.</li><li>✔ Couverture rigide personnalisée.</li><li>✔ Reliure de qualité.</li><li>✔ Impression couleur haute définition.</li><li>✔ Personnalisation avec nom, photo, illustration ou texte.</li><li>✔ Résistant et élégant.</li></ul><br><strong>Idéal pour :</strong><ul><li>• Les enseignants.</li><li>• Les étudiants.</li><li>• Les professionnels.</li><li>• Les cadeaux personnalisés.</li></ul><br><em>Un agenda unique qui allie organisation et style.</em>`,
+            
+            `<strong>Format : 12 × 16 cm</strong><br><br>L'<strong>Agenda Standard</strong> est conçu pour ceux qui recherchent un agenda élégant, pratique et immédiatement disponible.<br><br>Son format compact permet de planifier facilement les rendez-vous, les tâches et les objectifs du quotidien.<br><br><strong>Caractéristiques :</strong><ul><li>✔ Format : 12 × 16 cm.</li><li>✔ Couverture rigide.</li><li>✔ Impression de haute qualité.</li><li>✔ Reliure solide.</li><li>✔ Léger et facile à transporter.</li><li>✔ Disponible en stock.</li></ul><br><strong>Convient à :</strong><ul><li>• Enseignants</li><li>• Étudiants</li><li>• Professionnels</li><li>• Utilisation quotidienne</li></ul><br><em>Un agenda sobre, pratique et durable pour une organisation efficace toute l'année.</em>`
+        ];
+
+        // 2. LIENS DES IMAGES POUR LES AGENDAS
+        const agendaInternalImages = [
+            "https://github.com/123haythoum/espace_client/blob/main/images/01.jpeg?raw=true",
+            "https://github.com/123haythoum/espace_client/blob/main/images/02.jpeg?raw=true",
+            "https://github.com/123haythoum/espace_client/blob/main/images/03.jpeg?raw=true",
+            "https://github.com/123haythoum/espace_client/blob/main/images/04.jpeg?raw=true",
+            "https://github.com/123haythoum/espace_client/blob/main/images/05.jpeg?raw=true",
+            "https://github.com/123haythoum/espace_client/blob/main/images/06.jpeg?raw=true",
+            "https://github.com/123haythoum/espace_client/blob/main/images/07.jpeg?raw=true"
         ];
 
         let produitsGlobaux = [];
@@ -531,10 +539,8 @@
             }
 
             if(data.inventaire) {
-                // MODIFICATION 1 : On filtre (masque) les packs 1 et 2 de la grille générale
                 let inventaireFiltre = data.inventaire.filter(p => p != null && p.id !== "pack_1" && p.id !== "pack_2");
                 
-                // MODIFICATION 2 : On force les nouveaux prix des agendas sur l'interface client
                 inventaireFiltre.forEach(p => {
                     if(p.id === "ag_perso") p.prix = 20;
                     if(p.id === "ag_std") p.prix = 15;
@@ -628,7 +634,7 @@
                         <div class="review-card">
                             <div class="review-stars">${etoilesHtml}</div>
                             <div class="review-date">${dateTexte}</div>
-                            <div class="review-text">" Produit de qualité, très satisfait de my commande. Excellent service client. "</div>
+                            <div class="review-text">" Produit de qualité, très satisfait de ma commande. Excellent service client. "</div>
                             <div style="margin-top:12px; font-weight:700; color:var(--primary-color); font-size:0.9rem;">— Enseignant(e)</div>
                         </div>
                     `;
@@ -656,6 +662,7 @@
             `;
         }
 
+        // 3. LOGIQUE MISE À JOUR POUR AFFICHER LES GALERIES PHOTO ET L'ARGUMENTAIRE GLOBAL
         function voirDetails(index) {
             let p = produitsGlobaux[index];
             let imgUrl = images[index] || "https://via.placeholder.com/250";
@@ -674,12 +681,54 @@
                      <button class="btn-action" onclick="ajouterAuPanier(${index})">🛒 Ajouter au panier</button>
                    </div>`;
 
+            // Construction de la galerie d'images pour les agendas (Standard et Personnalisé)
+            let galleryHTML = "";
+            if (p.id === "ag_std" || p.id === "ag_perso" || p.nom.toLowerCase().includes("agenda")) {
+                galleryHTML += `
+                    <div style="margin-top: 20px;">
+                        <p style="font-weight: 600; font-size: 0.9rem; color: var(--primary-color); margin-bottom: 8px;">📸 Aperçu des pages intérieures (Cliquez pour agrandir) :</p>
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+                `;
+                agendaInternalImages.forEach(imgSrc => {
+                    galleryHTML += `
+                        <img src="${imgSrc}" style="width: 100%; height: 60px; object-fit: cover; border-radius: 6px; cursor: pointer; border: 2px solid #eee; transition: 0.2s;" 
+                             onclick="document.getElementById('main-product-img').src='${imgSrc}'" 
+                             onmouseover="this.style.borderColor='var(--secondary-color)'" 
+                             onmouseout="this.style.borderColor='#eee'">
+                    `;
+                });
+                galleryHTML += `</div></div>`;
+            }
+
+            // Bloc argumentaire de fin requis
+            let coreArgumentsHTML = `
+                <div class="why-choose-us">
+                    <h4>⭐ Pourquoi choisir nos produits ?</h4>
+                    <ul>
+                        <li>📌 Fabrication soignée avec des matériaux de qualité.</li>
+                        <li>🎨 Design moderne et professionnel.</li>
+                        <li>🖨️ Impression haute définition.</li>
+                        <li>💪 Reliure solide pour une utilisation intensive.</li>
+                        <li>📚 Conçus spécialement pour les enseignants tunisiens.</li>
+                        <li>🇹🇳 Fabrication locale.</li>
+                        <li>✨ Possibilité de personnalisation sur plusieurs modèles.</li>
+                        <li>🚚 Expédition rapide et emballage soigné.</li>
+                    </ul>
+                </div>
+            `;
+
             document.getElementById("detail-container").innerHTML = `
-                <div class="detail-img"><img src="${imgUrl}" alt="${p.nom}"></div>
+                <div class="detail-img">
+                    <img id="main-product-img" src="${imgUrl}" alt="${p.nom}">
+                    ${galleryHTML}
+                </div>
                 <div class="detail-info">
                     <h2>${p.nom}</h2>
                     <div class="product-price" style="font-size:1.8rem;">${Number(p.prix).toFixed(2)} DT</div>
-                    <div class="desc"><strong>Détails du produit :</strong><br><br>${desc}</div>
+                    <div class="desc">
+                        ${desc}
+                        ${coreArgumentsHTML}
+                    </div>
                     ${btnAjout}
                 </div>
             `;
@@ -702,7 +751,6 @@
             retourCatalogue();
         }
 
-        // Ajout direct depuis les bannières packs
         function ajouterPackAuPanier(id, nom, prix) {
             let existant = panier.find(item => item.id === id);
             if(existant) {
@@ -767,9 +815,7 @@
                      
             container.innerHTML = html;
 
-            // Auto-remplir l'email si connecté
             if(auth.currentUser && !document.getElementById("client-nom").value.includes(auth.currentUser.email)) {
-                // On peut optionnellement stocker le nom, ici on met l'email pour le repérage
                 document.getElementById("client-nom").value += auth.currentUser.email;
             }
         }
@@ -783,7 +829,6 @@
             let adresseClient = document.getElementById("client-adresse").value;
             let dateCmd = new Date().toLocaleString('fr-FR');
             
-            // Si un utilisateur est connecté, on attache son email à la commande pour l'historique futur
             let userEmail = auth.currentUser ? auth.currentUser.email : "Invité";
 
             let promesses = panier.map((item, index) => {
@@ -800,7 +845,7 @@
                     idArticle: item.id, 
                     quantite: item.qty,
                     total: totalLigne,
-                    statut: "en attente" // Ajout explicite du statut pour l'admin
+                    statut: "en attente"
                 };
                 return db.ref("data_magasin/commandes").push(cmd);
             });
