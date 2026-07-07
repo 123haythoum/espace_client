@@ -22,7 +22,17 @@
     <!-- Google Fonts : Playfair Display + Montserrat -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js">
+const infoData={
+about:`<h2>Qui sommes-nous ?</h2><p>Journali est une aventure artisanale née en 2025, dédiée à la conception d'outils pédagogiques qui allient solidité et esthétique. Notre mission est d'accompagner les enseignants tunisiens en créant des supports durables — alliant carton premium de 1.5 mm et reliures précises — pour simplifier votre quotidien professionnel.</p>`,
+products:`<h2>Nos produits</h2><p>Découvrez notre collection de carnets et agendas conçus pour durer. Chaque pièce est le résultat d'une conception rigoureuse : couvertures rigides, reliures spirales Pas 3:1 pour une ouverture à 360°, et une attention particulière portée à la qualité du papier. L'excellence au service de votre pédagogie.</p>`,
+plus:`<h2>JOURNALI PLUS+</h2><p>L'espace exclusif pour aller plus loin. Explorez notre bibliothèque de supports pédagogiques enrichis et de ressources prêtes à l'emploi. Vous avez besoin d'un accompagnement sur-mesure ? Journali Plus+ vous met également en contact direct avec nos experts pour des cours particuliers ciblés, spécialement conçus pour les élèves de 6ème année primaire afin de garantir leur réussite aux examens nationaux.</p>`,
+contact:`<h2>Contact</h2><p>📞 25801167 / 29148042<br>📘 Facebook : Rejoignez notre communauté.<br>📍 Zaghouan, Tunisie</p>`
+};
+function showInfo(k){let p=document.getElementById('infoPanel');p.innerHTML=infoData[k];p.classList.add('open');}
+function closeInfoPanel(){document.getElementById('infoPanel').classList.remove('open');}
+
+</script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     
@@ -839,9 +849,25 @@
             .catalog-grid { grid-template-columns: 1fr; }
             .detail-view { flex-direction: column; }
         }
-    </style>
+    
+/* SIDEBAR */
+.sidebar{position:fixed;left:20px;top:50%;transform:translateY(-50%);width:80px;background:rgba(255,255,255,.18);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.3);border-radius:28px;z-index:9999;transition:.4s;overflow:hidden}
+.sidebar:hover{width:320px}.sidebar ul{list-style:none;padding:15px 0}.sidebar a{display:flex;align-items:center;padding:14px 22px;text-decoration:none;color:var(--navy);font-weight:600}.sidebar a:hover{background:rgba(184,150,90,.15)}.sidebar i{min-width:36px;font-style:normal}.sidebar span{opacity:0;white-space:nowrap;transition:.3s}.sidebar:hover span{opacity:1}
+.info-panel{position:fixed;left:120px;top:50%;transform:translateY(-50%) translateX(-30px);width:430px;max-height:80vh;overflow:auto;background:rgba(255,255,255,.88);backdrop-filter:blur(20px);border-radius:28px;padding:30px;box-shadow:0 20px 50px rgba(0,0,0,.15);opacity:0;pointer-events:none;transition:.4s;z-index:9998}.info-panel.open{opacity:1;pointer-events:auto;transform:translateY(-50%) translateX(0)}
+
+</style>
 </head>
 <body>
+
+<div class="sidebar"><ul>
+<li><a href="#" onclick="closeInfoPanel()"><i>🏠</i><span>Accueil</span></a></li>
+<li><a href="#" onclick="showInfo('about')"><i>👥</i><span>Qui sommes-nous ?</span></a></li>
+<li><a href="#" onclick="showInfo('products')"><i>📚</i><span>Nos produits</span></a></li>
+<li><a href="#" onclick="showInfo('plus')"><i>⭐</i><span>JOURNALI PLUS+</span></a></li>
+<li><a href="#" onclick="showInfo('contact')"><i>☎️</i><span>Contact</span></a></li>
+</ul></div>
+<div id="infoPanel" class="info-panel"></div>
+
 
     <!-- =============================================
          HEADER
