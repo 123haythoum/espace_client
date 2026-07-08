@@ -26,12 +26,23 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     
     <script>
+        const firebaseConfig = {
+  apiKey: "AIzaSyCDV63W3AlfDr-99apHpktPidgpFurh96g",
+  authDomain: "journali-a0171.firebaseapp.com",
+  databaseURL: "https://journali-a0171-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "journali-a0171",
+  storageBucket: "journali-a0171.firebasestorage.app",
+  messagingSenderId: "524270095702",
+  appId: "1:524270095702:web:80257fb46a0a077b2e1af7"
+};
         const infoData={
             about:`<h2>Qui sommes-nous ?</h2><p>Journali est une aventure artisanale née en 2025, dédiée à la conception d'outils pédagogiques qui allient solidité et esthétique. Notre mission est d'accompagner les enseignants tunisiens en créant des supports durables — alliant carton premium de 1.5 mm et reliures précises — pour simplifier votre quotidien professionnel.</p>`,
             products:`<h2>Nos produits</h2><p>Découvrez notre collection de carnets et agendas conçus pour durer. Chaque pièce est le résultat d'une conception rigoureuse : couvertures rigides, reliures spirales Pas 3:1 pour une ouverture à 360°, et une attention particulière portée à la qualité du papier. L'excellence au service de votre pédagogie.</p>`,
             plus:`<h2>JOURNALI PLUS+</h2><p>L'espace exclusif pour aller plus loin. Explorez notre bibliothèque de supports pédagogiques enrichis et de ressources prêtes à l'emploi. Vous avez besoin d'un accompagnement sur-mesure ? Journali Plus+ vous met également en contact direct avec nos experts pour des cours particuliers ciblés, spécialement conçus pour les élèves de 6ème année primaire afin de garantir leur réussite aux examens nationaux.</p>`,
             contact:`<h2>Contact</h2><p>📞 25801167 / 29148042<br>📘 Facebook : Rejoignez notre communauté.<br>📍 Zaghouan, Tunisie</p>`
         };
+        firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
         function showInfo(k){let p=document.getElementById('infoPanel');p.innerHTML=infoData[k];p.classList.add('open');}
         function closeInfoPanel(){document.getElementById('infoPanel').classList.remove('open');}
     </script>
