@@ -19,7 +19,6 @@
     <meta name="description" content="Commandez vos journaux de classe personnalisés, cahiers de roulement et agendas premium pour enseignants. Qualité supérieure, livraison dans toute la Tunisie.">
     <link rel="icon" type="image/jpeg" href="https://www.facebook.com/photo?fbid=122160380822960850&set=a.122097545804960850">
     
-    <!-- Google Fonts : Playfair Display + Montserrat -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -256,6 +255,123 @@
             animation: fadeInUp 0.5s ease both;
         }
         .section.active { display: block; }
+
+        /* =============================================
+           👑 SECTION VIDÉO PRÉSENTATION (SHORT)
+        ============================================= */
+        .video-showcase-container {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid rgba(184, 150, 90, 0.25);
+            border-radius: var(--radius-md);
+            padding: 40px 30px;
+            margin-bottom: 50px;
+            box-shadow: var(--shadow-mid);
+            display: flex;
+            flex-direction: column; /* Par défaut sur mobile : l'un sur l'autre */
+            align-items: center;
+            gap: 35px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .video-showcase-container:hover {
+            box-shadow: var(--shadow-hover);
+            border-color: var(--gold);
+        }
+
+        .video-showcase-text {
+            flex: 1;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .video-badge {
+            display: inline-block;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 12px;
+            background: var(--gold-pale);
+            padding: 6px 16px;
+            border-radius: 50px;
+            border: 1px solid rgba(184, 150, 90, 0.3);
+        }
+
+        .video-showcase-text h2 {
+            color: var(--navy);
+            font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .video-title-line {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold-light), var(--gold), var(--gold-light));
+            margin: 0 auto 20px;
+            border-radius: 2px;
+        }
+
+        .video-showcase-text p {
+            color: var(--text-mid);
+            font-size: 0.96rem;
+            line-height: 1.85;
+            margin-bottom: 28px;
+        }
+
+        .btn-video-cta {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            color: var(--cream);
+            border: none;
+            padding: 15px 32px;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 6px 20px rgba(26, 39, 68, 0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-video-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(26, 39, 68, 0.35);
+            background: linear-gradient(135deg, var(--navy-light) 0%, var(--navy) 100%);
+            color: var(--gold-light);
+        }
+
+        .video-showcase-player {
+            width: 100%;
+            max-width: 290px;
+            flex-shrink: 0;
+            z-index: 1;
+        }
+
+        .video-showcase-player iframe {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            border-radius: var(--radius-md);
+            box-shadow: 0 15px 35px rgba(26, 39, 68, 0.2);
+            border: 4px solid var(--cream);
+            outline: 1px solid var(--gold-light);
+            display: block;
+            transition: var(--transition);
+        }
+
+        .video-showcase-player:hover iframe {
+            transform: scale(1.02);
+            box-shadow: 0 20px 45px rgba(26, 39, 68, 0.3);
+            outline-color: var(--gold);
+        }
 
         /* =============================================
            BLOC OFFRES SPÉCIALES
@@ -831,8 +947,31 @@
         }
 
         /* =============================================
-           RESPONSIVE — Mobile First
+           RESPONSIVE — Mobile First & Adaptations PC
         ============================================= */
+        @media (min-width: 768px) {
+            /* Bascule en côte-à-côte (split) pour la vidéo sur écran large */
+            .video-showcase-container {
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 55px 50px;
+                gap: 55px;
+            }
+
+            .video-showcase-text {
+                text-align: left;
+                padding-right: 20px;
+            }
+
+            .video-title-line {
+                margin: 0 0 26px 0;
+            }
+
+            .video-showcase-player {
+                max-width: 310px;
+            }
+        }
+
         @media (max-width: 768px) {
             body { padding: 20px 14px 110px; }
 
@@ -882,9 +1021,6 @@
 </head>
 <body>
 
-    <!-- =============================================
-         BARRE LATÉRALE & PANNEAUX D'INFORMATION
-    ============================================= -->
     <div id="panelOverlay" class="panel-overlay" onclick="closeInfoPanel()"></div>
 
     <div class="sidebar">
@@ -902,9 +1038,6 @@
         <div id="infoContent" class="info-content"></div>
     </div>
 
-    <!-- =============================================
-         HEADER
-    ============================================= -->
     <div class="header">
         <img src="https://github.com/123haythoum/espace_client/blob/main/images/7.jpg?raw=true" alt="Logo Journali" class="header-logo">
         <div class="header-subtitle">Artisanat · Pédagogie · Excellence</div>
@@ -932,12 +1065,31 @@
         </div>
     </div>
 
-    <!-- =============================================
-         SECTION CATALOGUE
-    ============================================= -->
     <div id="catalog-section" class="section active">
-        <!-- Offres Spéciales -->
-        <div class="packs-container">
+
+        <div class="video-showcase-container">
+            <div class="video-showcase-text">
+                <span class="video-badge">✦ Fabrication Artisanale ✦</span>
+                <h2>L'excellence de nos carnets en action</h2>
+                <div class="video-title-line"></div>
+                <p>Découvrez la qualité supérieure de nos couvertures rigides en carton 1.5 mm et la précision de nos reliures spirales Pas 3:1 conçues pour une ouverture à 360°. Des supports durables et élégants, façonnés à Zaghouan pour simplifier l'organisation et résister à toute une année scolaire.</p>
+                <button class="btn-video-cta" onclick="document.getElementById('packs-section-anchor').scrollIntoView({behavior: 'smooth'})">
+                    <span>🔍 Découvrir la collection</span>
+                </button>
+            </div>
+
+            <div class="video-showcase-player">
+                <iframe 
+                    src="https://www.youtube.com/embed/ks-XrLRLUEA?autoplay=1&mute=1&loop=1&playlist=ks-XrLRLUEA" 
+                    title="Présentation Artisanale Boutique Journali" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <div class="packs-container" id="packs-section-anchor">
             <h2 class="packs-title">
                 ✦ OFFRES SPÉCIALES RENTRÉE ✦
                 <span class="packs-title-line"></span>
@@ -965,10 +1117,8 @@
             </div>
         </div>
 
-        <!-- Grille produits -->
         <div class="catalog-grid" id="catalog-container"></div>
 
-        <!-- Avis clients -->
         <div class="reviews-wrapper" id="reviews-wrapper" style="display:none;">
             <h2>Avis de nos clients</h2>
             <p class="reviews-subtitle">آراء عملائنا</p>
@@ -976,17 +1126,11 @@
         </div>
     </div>
 
-    <!-- =============================================
-         SECTION DÉTAIL PRODUIT
-    ============================================= -->
     <div id="details-section" class="section">
         <button class="btn-back" onclick="retourCatalogue()">← Retour au catalogue</button>
         <div class="detail-view" id="detail-container"></div>
     </div>
 
-    <!-- =============================================
-         SECTION PANIER
-    ============================================= -->
     <div id="cart-section" class="section">
         <button class="btn-back" onclick="retourCatalogue()">← Continuer mes achats</button>
         <div style="background:#fff; padding:50px 40px; border-radius:var(--radius-md); box-shadow:var(--shadow-mid); border:1px solid rgba(184,150,90,0.12);">
@@ -1018,9 +1162,6 @@
         </div>
     </div>
 
-    <!-- =============================================
-         SECTION AUTHENTIFICATION
-    ============================================= -->
     <div id="auth-section" class="section">
         <button class="btn-back" onclick="retourCatalogue()">← Retour à la boutique</button>
         <div class="checkout-box" style="max-width:480px; margin:0 auto;">
@@ -1044,9 +1185,6 @@
         </div>
     </div>
 
-    <!-- =============================================
-         SECTION ESPACE COMPTE
-    ============================================= -->
     <div id="account-section" class="section">
         <button class="btn-back" onclick="retourCatalogue()">← Retour à la boutique</button>
         <div class="checkout-box" style="max-width:560px; margin:0 auto; text-align:center; padding:60px 40px;">
@@ -1061,9 +1199,6 @@
         </div>
     </div>
 
-    <!-- =============================================
-         SECTION SUCCÈS COMMANDE
-    ============================================= -->
     <div id="success-section" class="section" style="text-align:center; background:#fff; padding:70px 40px; border-radius:var(--radius-md); box-shadow:var(--shadow-mid); border:1px solid rgba(184,150,90,0.15);">
         <div style="width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg, var(--success), #3d9e76); display:flex; align-items:center; justify-content:center; margin:0 auto 24px; box-shadow:0 8px 24px rgba(46,125,94,0.25);">
             <span style="font-size:2rem; color:white;">✓</span>
@@ -1083,9 +1218,6 @@
         </div>
     </div>
 
-    <!-- =============================================
-         FOOTER
-    ============================================= -->
     <div class="footer">
         <p style="font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--navy); margin-bottom:4px;">Journali</p>
         <p style="font-size:0.72rem; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:16px;">Artisanat · Pédagogie · Excellence</p>
@@ -1099,9 +1231,6 @@
         <p style="font-size:0.75rem; opacity:0.6; margin-top:4px;">© 2026 Journali — Tous droits réservés.</p>
     </div>
 
-    <!-- =============================================
-         JAVASCRIPT
-    ============================================= -->
     <script>
         /* ---------- Données & Gestion du Panneau d'Information ---------- */
         const infoData = {
