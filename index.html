@@ -268,7 +268,7 @@
             margin-bottom: 50px;
             box-shadow: var(--shadow-mid);
             display: flex;
-            flex-direction: column; /* Par défaut sur mobile : l'un sur l'autre */
+            flex-direction: column;
             align-items: center;
             gap: 35px;
             position: relative;
@@ -950,7 +950,6 @@
            RESPONSIVE — Mobile First & Adaptations PC
         ============================================= */
         @media (min-width: 768px) {
-            /* Bascule en côte-à-côte (split) pour la vidéo sur écran large */
             .video-showcase-container {
                 flex-direction: row;
                 justify-content: space-between;
@@ -990,7 +989,6 @@
             .checkout-box { padding: 24px 18px; }
             .catalog-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
 
-            /* Adaptation de la sidebar en bas sur mobile pour ne pas cacher le contenu */
             .sidebar {
                 top: auto; bottom: 16px; left: 50%;
                 transform: translateX(-50%);
@@ -998,7 +996,7 @@
                 border-radius: 50px;
             }
             .sidebar:hover { width: 90%; }
-            .sidebar ul { display: flex; justify-content: space-around; padding: 8px 0; }
+            .sidebar ul { display: flex; justify-around; padding: 8px 0; }
             .sidebar li { margin: 0; }
             .sidebar a { padding: 10px; border-left: none; border-bottom: 3px solid transparent; flex-direction: column; gap: 4px; }
             .sidebar a:hover, .sidebar a.active-link { border-left: none; border-bottom-color: var(--gold); }
@@ -1151,10 +1149,10 @@
                     </div>
                     <div class="form-group">
                         <label>Adresse de livraison / عنوان التوصيل</label>
-                        <textarea id="client-adresse" rows="3" placeholder="Adresse exacte, ville, gouvernorat" required></textarea>
+                        <textarea id="client-adresse" rows="3" placeholder="Adresse exacte, ville, gouvernorat" oninput="afficherContenuPanier()" required></textarea>
                     </div>
                     <p style="font-size:0.85rem; color:var(--danger); font-weight:600; margin-bottom:24px; background:#fdf0f0; padding:14px 18px; border-radius:var(--radius-sm); border-left:4px solid var(--danger);">
-                        🚚 Frais de livraison estimés entre 7 et 10 DT selon région — 8.00 DT par défaut.
+                        🚚 Frais de livraison : 9.00 DT fixe sur toute la Tunisie — <strong>GRATUIT pour la région de Zaghouan</strong>.
                     </p>
                     <button type="submit" class="btn-action" style="font-size:1rem; padding:18px; letter-spacing:1.5px;">✓ Confirmer la commande / تأكيد الطلب</button>
                 </form>
@@ -1278,7 +1276,6 @@
             panel.classList.add('open');
             overlay.classList.add('open');
 
-            // Gérer la classe active sur les liens de la barre latérale
             document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active-link'));
             if(element) element.classList.add('active-link');
         }
@@ -1289,7 +1286,6 @@
             document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active-link'));
         }
 
-        // Touche Échap pour fermer le panneau
         document.addEventListener('keydown', function(event) {
             if (event.key === "Escape") { closeInfoPanel(); }
         });
@@ -1380,6 +1376,38 @@
             "https://github.com/123haythoum/espace_client/blob/main/images/07.jpeg?raw=true"
         ];
 
+        /* ---------- Nouveaux Produits ---------- */
+        const nouveauxProduits = [
+            {
+                id: "plan_ar_5",
+                nom: " مخططات اللغة العربية سنة خامسة: جميع الوحدات",
+                prix: 25,
+                image: "https://github.com/123haythoum/espace_client/blob/main/images/Gemini_Generated_Image_xurx5txurx5txurx%20(1).jpg?raw=true",
+                description: "مخططات اللغة العربية للسنة الخامسة ابتدائي شاملة لجميع الوحدات بتصميم أنيق وجودة طباعة عالية."
+            },
+            {
+                id: "plan_ar_6",
+                nom: " مخططات اللغة العربية سنة سادسة: جميع الوحدات",
+                prix: 25,
+                image: "https://github.com/123haythoum/espace_client/blob/main/images/Gemini_Generated_Image_xurx5txurx5txurx%20(1).jpg?raw=true",
+                description: "مخططات اللغة العربية للسنة السادسة ابتدائي شاملة لجميع الوحدات بتصميم أنيق وجودة طباعة عالية."
+            },
+            {
+                id: "plan_ar_4",
+                nom: " مخططات اللغة العربية سنة رابعة: جميع الوحدات",
+                prix: 25,
+                image: "https://github.com/123haythoum/espace_client/blob/main/images/Gemini_Generated_Image_xurx5txurx5txurx%20(1).jpg?raw=true",
+                description: "مخططات اللغة العربية للسنة الرابعة ابتدائي شاملة لجميع الوحدات بتصميم أنيق وجودة طباعة عالية."
+            },
+            {
+                id: "cahier_plan",
+                nom: " cahier de planification",
+                prix: 20,
+                image: "https://github.com/123haythoum/espace_client/blob/main/images/Gemini_Generated_Image_o861cjo861cjo861.jpg?raw=true",
+                description: "Cahier de planification pratique et élégant conçu pour accompagner les enseignants dans l'organisation de leurs cours au quotidien."
+            }
+        ];
+
         let produitsGlobaux = [];
         let panier = [];
         let idBestseller = null;
@@ -1391,7 +1419,7 @@
         }
 
         db.ref("data_magasin").once("value", (snapshot) => {
-            const data = snapshot.val();
+            const data = snapshot.val() || {};
             if(data.ventes) {
                 let ventesList = Array.isArray(data.ventes) ? data.ventes : Object.values(data.ventes);
                 let comptage = {};
@@ -1404,15 +1432,23 @@
                 }
             }
 
+            let inventaireBase = [];
             if(data.inventaire) {
-                let inventaireFiltre = data.inventaire.filter(p => p != null && p.id !== "pack_1" && p.id !== "pack_2");
-                inventaireFiltre.forEach(p => {
+                inventaireBase = data.inventaire.filter(p => p != null && p.id !== "pack_1" && p.id !== "pack_2");
+                inventaireBase.forEach(p => {
                     if(p.id === "ag_perso") p.prix = 20;
                     if(p.id === "ag_std") p.prix = 15;
                 });
-                produitsGlobaux = inventaireFiltre;
-                afficherCatalogue();
             }
+
+            nouveauxProduits.forEach(np => {
+                if (!inventaireBase.some(p => p.id === np.id || p.nom === np.nom)) {
+                    inventaireBase.push(np);
+                }
+            });
+
+            produitsGlobaux = inventaireBase;
+            afficherCatalogue();
         });
 
         db.ref("data_magasin/avis").limitToLast(8).once("value", (snapshot) => {
@@ -1435,8 +1471,8 @@
             container.innerHTML = "";
             
             produitsGlobaux.forEach((p, index) => {
-                let imgUrl = images[index] || "https://via.placeholder.com/250";
-                let desc = descriptions[index] || "Produit premium Journali";
+                let imgUrl = p.image || images[index] || "https://via.placeholder.com/250";
+                let desc = p.description || descriptions[index] || "Produit premium Journali";
                 let isPersonnalise = p.nom.toLowerCase().includes("personnalisé") || desc.toLowerCase().includes("personnalisé");
                 let stockActuel = (p.stock !== undefined) ? Number(p.stock) : 1; 
                 let stockStr = String(p.stock || "").toLowerCase();
@@ -1519,8 +1555,8 @@
 
         function voirDetails(index) {
             let p = produitsGlobaux[index];
-            let imgUrl = images[index] || "https://via.placeholder.com/250";
-            let desc = descriptions[index];
+            let imgUrl = p.image || images[index] || "https://via.placeholder.com/250";
+            let desc = p.description || descriptions[index] || "Produit premium Journali";
             let isPersonnalise = p.nom.toLowerCase().includes("personnalisé") || desc.toLowerCase().includes("personnalisé");
             let stockActuel = (p.stock !== undefined) ? Number(p.stock) : 1; 
             let stockStr = String(p.stock || "").toLowerCase();
@@ -1612,6 +1648,17 @@
             mettreAJourBadge(); sauvegarderPanier(); afficherContenuPanier();
         }
 
+        function calculerFraisLivraison() {
+            let adresseInput = document.getElementById("client-adresse");
+            if (adresseInput) {
+                let val = adresseInput.value.toLowerCase().trim();
+                if (val.includes("zaghouan") || val.includes("زغوان")) {
+                    return 0;
+                }
+            }
+            return 9.00;
+        }
+
         function afficherContenuPanier() {
             let container = document.getElementById("cart-items-container");
             let checkoutBox = document.getElementById("checkout-box");
@@ -1641,13 +1688,14 @@
                          </tr>`;
             });
             
-            let fraisLivraison = 8.00;
+            let fraisLivraison = calculerFraisLivraison();
             let totalGeneral = sousTotal + fraisLivraison;
+            let livTxt = (fraisLivraison === 0) ? "<span style='color:var(--success); font-weight:bold;'>Gratuit (Région Zaghouan)</span>" : `<strong>${fraisLivraison.toFixed(2)} DT</strong>`;
 
             html += `</tbody></table></div>
                      <div style="text-align:right; margin-top:25px; font-size:1.15rem; background: var(--warm-gray); padding: 20px; border-radius: 8px;">
                         <p style="margin-bottom:8px;">Sous-total : <strong>${sousTotal.toFixed(2)} DT</strong></p>
-                        <p style="color:var(--gold); margin-bottom:15px;">Livraison estimée : <strong>${fraisLivraison.toFixed(2)} DT</strong></p>
+                        <p style="color:var(--gold); margin-bottom:15px;">Livraison : ${livTxt}</p>
                         <h2 style="color:var(--navy); border-top: 2px solid #ddd; padding-top:15px; font-size: 1.8rem;">Total à payer : ${totalGeneral.toFixed(2)} DT</h2>
                      </div>`;
                      
@@ -1664,16 +1712,18 @@
             let dateCmd = new Date().toLocaleString('fr-FR');
             let userEmail = auth.currentUser ? auth.currentUser.email : "Invité";
 
+            let fraisLiv = calculerFraisLivraison();
+
             let promesses = panier.map((item, index) => {
                 let totalLigne = item.prix * item.qty;
-                if(index === 0) totalLigne += 8; 
+                if(index === 0) totalLigne += fraisLiv; 
 
                 const cmd = {
                     date: dateCmd,
                     client: nomClient,
                     compteEmail: userEmail,
                     telephone: telClient,
-                    adresse: adresseClient + (index === 0 ? " (Inclut frais livraison 8DT)" : ""),
+                    adresse: adresseClient + (index === 0 ? (fraisLiv === 0 ? " (Livraison Gratuite - Zaghouan)" : " (Inclut frais livraison 9DT)") : ""),
                     article: item.nom,
                     idArticle: item.id, 
                     quantite: item.qty,
