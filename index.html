@@ -17,7 +17,7 @@
     <meta name="twitter:description" content="Planifiez votre année scolaire. Accédez à votre espace pour personnaliser votre agenda pédagogique et valider votre commande en quelques clics.">
     <meta name="twitter:image" content="https://123haythoum.github.io/espace_client/images/04.jpeg">
     <meta name="description" content="Commandez vos journaux de classe personnalisés, cahiers de roulement et agendas premium pour enseignants. Qualité supérieure, livraison dans toute la Tunisie.">
-    <link rel="icon" type="image/jpeg" href="https://www.facebook.com/photo?fbid=122160380822960850&set=a.122097545804960850">
+    <link rel="icon" type="image/png" href="https://github.com/123haythoum/espace_client/blob/main/images/7.jpg?raw=true">
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -93,6 +93,83 @@
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* =============================================
+           TOASTS (NOTIFICATIONS ÉLÉGANTES) + LOADER + RECHERCHE
+        ============================================= */
+        #toast-container {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 99999; display: flex; flex-direction: column; gap: 10px; align-items: center;
+            pointer-events: none; width: max-content;
+        }
+        .toast {
+            background: #fff; color: var(--text-dark);
+            padding: 14px 26px; border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-hover); border-left: 4px solid var(--success);
+            font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 500;
+            display: flex; align-items: center; gap: 10px;
+            animation: toastIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+            max-width: 92vw;
+        }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.info  { border-left-color: var(--navy); }
+        .toast.hiding { animation: toastOut 0.3s ease forwards; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(-18px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes toastOut { to { opacity: 0; transform: translateY(-18px) scale(0.95); } }
+
+        .page-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--cream); z-index: 99998; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .page-loader.hidden { opacity: 0; pointer-events: none; }
+        .loader-spinner {
+            width: 46px; height: 46px; border: 4px solid rgba(184,150,90,0.25);
+            border-top-color: var(--gold); border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .page-loader p { margin-top: 18px; color: var(--text-mid); font-size: 0.9rem; font-weight: 500; letter-spacing: 1px; }
+
+        .btn-pulse { animation: pulse 0.4s ease; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.18); } 100% { transform: scale(1); } }
+
+        .catalog-search-bar { width: 100%; position: relative; margin-bottom: 22px; }
+        .catalog-search-bar::before {
+            content: '🔍'; position: absolute; left: 18px; top: 50%;
+            transform: translateY(-50%); font-size: 1.05rem; opacity: 0.6; z-index: 2;
+        }
+        .catalog-search-bar input {
+            width: 100%; padding: 15px 20px 15px 50px;
+            font-size: 0.95rem; margin-bottom: 0;
+        }
+        .no-results { text-align: center; color: var(--text-light); font-size: 1rem; padding: 40px 20px; }
+
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #128c4e, #25d366);
+            color: #fff; border: none; padding: 13px 26px; border-radius: 50px;
+            font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.9rem;
+            letter-spacing: 0.5px; cursor: pointer; transition: var(--transition);
+            display: inline-flex; align-items: center; gap: 10px;
+            box-shadow: 0 4px 16px rgba(37,211,102,0.3);
+            text-decoration: none;
+        }
+        .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(37,211,102,0.45); }
+
+        .whatsapp-float {
+            position: fixed; bottom: 20px; right: 20px; z-index: 9000;
+            width: 58px; height: 58px; border-radius: 50%;
+            background: linear-gradient(135deg, #128c4e, #25d366);
+            color: #fff; display: flex; align-items: center; justify-content: center;
+            font-size: 1.7rem; text-decoration: none;
+            box-shadow: 0 8px 24px rgba(37,211,102,0.4);
+            transition: var(--transition);
+        }
+        .whatsapp-float:hover { transform: scale(1.1); }
+        @media (max-width: 768px) {
+            .whatsapp-float { bottom: 90px; right: 14px; width: 52px; height: 52px; font-size: 1.5rem; }
         }
 
         /* =============================================
@@ -1019,6 +1096,13 @@
 </head>
 <body>
 
+    <div id="pageLoader" class="page-loader">
+        <div class="loader-spinner"></div>
+        <p>Chargement de la boutique… / جاري التحميل…</p>
+    </div>
+
+    <div id="toast-container"></div>
+
     <div id="panelOverlay" class="panel-overlay" onclick="closeInfoPanel()"></div>
 
     <div class="sidebar">
@@ -1078,13 +1162,18 @@
 
             <div class="video-showcase-player">
                 <iframe 
-                    src="https://www.youtube.com/embed/ks-XrLRLUEA?autoplay=1&mute=1&loop=1&playlist=ks-XrLRLUEA" 
+                    src="https://www.youtube.com/embed/ks-XrLRLUEA?mute=1&loop=1&playlist=ks-XrLRLUEA" 
                     title="Présentation Artisanale Boutique Journali" 
                     frameborder="0" 
+                    loading="lazy"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                     allowfullscreen>
                 </iframe>
             </div>
+        </div>
+
+        <div class="catalog-search-bar" style="max-width:1040px;">
+            <input type="text" id="search-input" placeholder="Rechercher un produit… (Journal, Agenda, Mخططات…)" oninput="filtrerCatalogue()" aria-label="Rechercher un produit">
         </div>
 
         <div class="packs-container" id="packs-section-anchor">
@@ -1145,11 +1234,44 @@
                     </div>
                     <div class="form-group">
                         <label>Téléphone / رقم الهاتف</label>
-                        <input type="tel" id="client-tel" placeholder="Ex : 2X XXX XXX" required>
+                        <input type="tel" id="client-tel" placeholder="Ex : 2X XXX XXX (8 chiffres)" maxlength="12" required>
+                        <small id="tel-hint" style="color:var(--danger); font-size:0.78rem; display:none; margin-top:6px;">⚠️ Numéro invalide : 8 chiffres requis (ex : 25801167).</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Gouvernorat / الولاية</label>
+                        <select id="client-gouv" onchange="afficherContenuPanier()" style="width:100%; padding:15px 18px; border:1.5px solid rgba(26,39,68,0.15); border-radius:var(--radius-sm); font-family:'Montserrat',sans-serif; font-size:0.92rem; color:var(--text-dark); background:var(--cream); cursor:pointer; transition:var(--transition);">
+                            <option value="">— Sélectionnez votre gouvernorat —</option>
+                            <option value="Zaghouan">Zaghouan زغوان ✦ Livraison Gratuite</option>
+                            <option value="Tunis">Tunis تونس</option>
+                            <option value="Ariana">Ariana أريانة</option>
+                            <option value="Ben Arous">Ben Arous بن عروس</option>
+                            <option value="Manouba">Manouba منوبة</option>
+                            <option value="Nabeul">Nabeul نابل</option>
+                            <option value="Hammamet">Hammamet / Nabeul</option>
+                            <option value="Bizerte">Bizerte بنزرت</option>
+                            <option value="Béja">Béja باجة</option>
+                            <option value="Jendouba">Jendouba جندوبة</option>
+                            <option value="Le Kef">Le Kef الكاف</option>
+                            <option value="Siliana">Siliana سليانة</option>
+                            <option value="Sousse">Sousse سوسة</option>
+                            <option value="Monastir">Monastir المنستير</option>
+                            <option value="Mahdia">Mahdia المهدية</option>
+                            <option value="Kairouan">Kairouan القيروان</option>
+                            <option value="Sfax">Sfax صفاقس</option>
+                            <option value="Kasserine">Kasserine القصرين</option>
+                            <option value="Sidi Bouzid">Sidi Bouzid سيدي بوزيد</option>
+                            <option value="Gabès">Gabès قابس</option>
+                            <option value="Médenine">Médenine مدنين</option>
+                            <option value="Tataouine">Tataouine تطاوين</option>
+                            <option value="Gafsa">Gafsa قفصة</option>
+                            <option value="Tozeur">Tozeur توزر</option>
+                            <option value="Kébili">Kébili قبلي</option>
+                            <option value="Autre">Autre / آخر</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Adresse de livraison / عنوان التوصيل</label>
-                        <textarea id="client-adresse" rows="3" placeholder="Adresse exacte, ville, gouvernorat" oninput="afficherContenuPanier()" required></textarea>
+                        <textarea id="client-adresse" rows="3" placeholder="Adresse exacte, ville" oninput="afficherContenuPanier()" required></textarea>
                     </div>
                     <p style="font-size:0.85rem; color:var(--danger); font-weight:600; margin-bottom:24px; background:#fdf0f0; padding:14px 18px; border-radius:var(--radius-sm); border-left:4px solid var(--danger);">
                         🚚 Frais de livraison : 9.00 DT fixe sur toute la Tunisie — <strong>GRATUIT pour la région de Zaghouan</strong>.
@@ -1202,10 +1324,13 @@
             <span style="font-size:2rem; color:white;">✓</span>
         </div>
         <h2 style="color:var(--success); margin-bottom:16px; font-size:clamp(1.5rem, 3vw, 2.2rem);">Commande envoyée avec succès !</h2>
-        <p style="color:var(--text-mid); margin-bottom:50px; font-size:1rem; line-height:1.8;">
+        <p style="color:var(--text-mid); margin-bottom:34px; font-size:1rem; line-height:1.8;">
             Nous vous contacterons très prochainement pour la confirmation.<br>
             <span style="color:var(--text-light);">سنتصل بك قريباً لتأكيد الطلب.</span>
         </p>
+        <a id="btn-whatsapp-success" class="btn-whatsapp" style="margin:0 auto 34px;" target="_blank" rel="noopener">
+            💬 Confirmer ma commande sur WhatsApp
+        </a>
         <div style="background:var(--warm-gray); padding:40px; border-radius:var(--radius-md); max-width:520px; margin:0 auto; border:1px solid rgba(184,150,90,0.15);">
             <h3 style="color:var(--navy); margin-bottom:6px; font-family:'Playfair Display',serif; font-size:1.2rem;">Évaluez votre expérience</h3>
             <p style="font-size:0.78rem; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:4px;">قيم تجربتك في موقعنا</p>
@@ -1215,6 +1340,8 @@
             <button class="btn-action" style="width:auto; padding:13px 44px; margin:0 auto; display:block; letter-spacing:1.5px;" onclick="envoyerFeedback()">Envoyer / إرسال</button>
         </div>
     </div>
+
+    <a class="whatsapp-float" href="https://wa.me/21625801167?text=Bonjour%20Journali%2C%20je%20souhaite%20plus%20d'informations%20sur%20vos%20produits." target="_blank" rel="noopener" title="Nous contacter sur WhatsApp">💬</a>
 
     <div class="footer">
         <p style="font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--navy); margin-bottom:4px;">Journali</p>
@@ -1291,6 +1418,48 @@
         });
 
 
+        /* ---------- Système de Toasts (remplace les alert() intrusives) ---------- */
+        function toaster(message, type = 'success', duration = 3200) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + (type === 'error' ? 'error' : type === 'info' ? 'info' : '');
+            const icons = { success: '✅', error: '⚠️', info: 'ℹ️' };
+            toast.innerHTML = `<span>${icons[type] || '✅'}</span><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('hiding');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        function fermerLoader() {
+            const loader = document.getElementById('pageLoader');
+            if (loader) { loader.classList.add('hidden'); setTimeout(() => loader.remove(), 600); }
+        }
+
+        /* ---------- Recherche / Filtrage du catalogue ---------- */
+        function filtrerCatalogue() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('#catalog-container .product-card');
+            let visible = 0;
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                const match = !query || text.includes(query);
+                card.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+            let noRes = document.getElementById('no-results-msg');
+            if (query && visible === 0) {
+                if (!noRes) {
+                    noRes = document.createElement('div');
+                    noRes.id = 'no-results-msg';
+                    noRes.className = 'no-results';
+                    noRes.textContent = 'Aucun produit ne correspond à votre recherche. 🛍️';
+                    document.getElementById('catalog-container').after(noRes);
+                }
+            } else if (noRes) { noRes.remove(); }
+        }
+
         /* ---------- Initialisation Firebase ---------- */
         const firebaseConfig = {
             apiKey: "AIzaSyCDV63W3AlfDr-99apHpktPidgpFurh96g",
@@ -1332,19 +1501,19 @@
 
             if (isLoginMode) {
                 auth.signInWithEmailAndPassword(email, pass)
-                    .then(() => { alert("Bienvenue dans votre espace !"); ouvrirEspaceCompte(); })
-                    .catch(err => alert("Erreur de connexion : " + err.message));
+                    .then(() => { toaster("Bienvenue dans votre espace ! ✨"); ouvrirEspaceCompte(); })
+                    .catch(err => toaster("Erreur de connexion : " + err.message, "error", 5000));
             } else {
                 auth.createUserWithEmailAndPassword(email, pass)
-                    .then(() => { alert("Compte créé avec succès ! Bienvenue !"); ouvrirEspaceCompte(); })
-                    .catch(err => alert("Erreur lors de l'inscription : " + err.message));
+                    .then(() => { toaster("Compte créé avec succès ! Bienvenue ! 🎉"); ouvrirEspaceCompte(); })
+                    .catch(err => toaster("Erreur lors de l'inscription : " + err.message, "error", 5000));
             }
         }
 
         function seDeconnecter() {
             auth.signOut()
-                .then(() => { alert("Vous avez été déconnecté."); retourCatalogue(); })
-                .catch(() => alert("Erreur lors de la déconnexion."));
+                .then(() => { toaster("Vous avez été déconnecté.", "info"); retourCatalogue(); })
+                .catch(() => toaster("Erreur lors de la déconnexion.", "error"));
         }
 
         /* ---------- Données produits ---------- */
@@ -1521,11 +1690,15 @@
                         etoilesHtml += (i <= note) ? "★" : "<span style='color:#ccc'>★</span>";
                     }
                     let dateTexte = avis.date ? avis.date.split(' ')[0] : "Récemment";
+                    // Afficher le véritable message du client si disponible
+                    let messageClient = (avis.message && avis.message.trim() && !avis.message.toLowerCase().includes("Avis client post-commande"))
+                        ? avis.message.trim()
+                        : "Produit de qualité, très satisfait de ma commande. Excellent service client.";
                     container.innerHTML += `
                         <div class="review-card">
                             <div class="review-stars">${etoilesHtml}</div>
                             <div class="review-date">${dateTexte}</div>
-                            <div class="review-text">" Produit de qualité, très satisfait de ma commande. Excellent service client. "</div>
+                            <div class="review-text">« ${messageClient} »</div>
                             <div style="margin-top:12px; font-weight:700; color:var(--navy); font-size:0.9rem;">— Enseignant(e)</div>
                         </div>
                     `;
@@ -1562,12 +1735,24 @@
             let stockStr = String(p.stock || "").toLowerCase();
             let isRupture = !isPersonnalise && stockActuel <= 0 && !stockStr.includes("commande");
 
+            let personnaliseHTML = "";
+            if (isPersonnalise) {
+                personnaliseHTML = `
+                    <div class="form-group" style="margin-top:20px;">
+                        <label>✍️ Texte de personnalisation (optionnel)</label>
+                        <textarea id="perso-text" rows="2" placeholder="Ex : Mme Aïcha Ben Salem — École primaire Zaghouan" maxlength="120" style="width:100%; padding:12px 16px; border:1.5px solid rgba(26,39,68,0.15); border-radius:var(--radius-sm); font-family:'Montserrat',sans-serif; font-size:0.9rem; color:var(--text-dark); background:var(--cream); resize:vertical;"></textarea>
+                        <small style="color:var(--text-light); font-size:0.75rem;">Votre texte sera imprimé sur la couverture.</small>
+                    </div>
+                `;
+            }
+
             let btnAjout = isRupture 
                 ? `<button class="btn-action" style="background:#ccc; cursor:not-allowed;" disabled>Rupture de stock / نفذت الكمية</button>`
-                : `<div style="display:flex; gap:15px; margin-top:20px;">
+                : `<div style="display:flex; gap:15px; margin-top:20px; flex-wrap:wrap;">
                      <input type="number" id="qty-add" value="1" min="1" style="width: 90px; text-align:center; font-weight:bold; font-size:1.1rem;">
-                     <button class="btn-action" onclick="ajouterAuPanier(${index})">🛒 Ajouter au panier</button>
-                   </div>`;
+                     <button class="btn-action" style="flex:1; min-width:180px;" onclick="ajouterAuPanier(${index})">🛒 Ajouter au panier</button>
+                   </div>
+                   ${personnaliseHTML}`;
 
             let galleryHTML = "";
             if (p.id === "ag_std" || p.id === "ag_perso" || p.nom.toLowerCase().includes("agenda")) {
@@ -1624,10 +1809,13 @@
         function ajouterAuPanier(index) {
             let p = produitsGlobaux[index];
             let qty = parseInt(document.getElementById("qty-add").value) || 1;
+            let persoField = document.getElementById("perso-text");
+            let persoTxt = (persoField && persoField.value.trim()) ? persoField.value.trim() : "";
             let existant = panier.find(item => item.id === p.id);
-            if(existant) { existant.qty += qty; } else { panier.push({ id: p.id, nom: p.nom, prix: Number(p.prix), qty: qty }); }
+            if(existant) { existant.qty += qty; if(persoTxt) existant.personnalisation = persoTxt; }
+            else { panier.push({ id: p.id, nom: p.nom, prix: Number(p.prix), qty: qty, personnalisation: persoTxt }); }
             mettreAJourBadge(); sauvegarderPanier();
-            alert("✅ Produit ajouté au panier !");
+            toaster(p.nom + " ajouté au panier ! 🛒");
             retourCatalogue();
         }
 
@@ -1635,27 +1823,35 @@
             let existant = panier.find(item => item.id === id);
             if(existant) { existant.qty += 1; } else { panier.push({ id: id, nom: nom, prix: Number(prix), qty: 1 }); }
             mettreAJourBadge(); sauvegarderPanier();
-            alert("✅ " + nom + " ajouté au panier !");
+            toaster("✅ " + nom + " ajouté au panier ! 🎉");
         }
 
         function mettreAJourBadge() {
             let totalItems = panier.reduce((sum, item) => sum + item.qty, 0);
             document.getElementById("cart-count").innerText = totalItems;
+            const badge = document.getElementById("cart-count");
+            badge.parentElement.classList.remove('btn-pulse');
+            void badge.offsetWidth; // reset animation
+            badge.parentElement.classList.add('btn-pulse');
         }
 
         function supprimerDuPanier(id) {
-            panier = panier.filter(item => item.id !== id);
+            let item = panier.find(i => i.id === id);
+            if(item && !confirm("Supprimer « " + item.nom + " » du panier ?")) return;
+            panier = panier.filter(i => i.id !== id);
             mettreAJourBadge(); sauvegarderPanier(); afficherContenuPanier();
         }
 
         function calculerFraisLivraison() {
             let adresseInput = document.getElementById("client-adresse");
+            let gouvSelect = document.getElementById("client-gouv");
             if (adresseInput) {
                 let val = adresseInput.value.toLowerCase().trim();
                 if (val.includes("zaghouan") || val.includes("زغوان")) {
                     return 0;
                 }
             }
+            if (gouvSelect && gouvSelect.value === "Zaghouan") { return 0; }
             return 9.00;
         }
 
@@ -1680,7 +1876,7 @@
                 let ligneTotal = item.prix * item.qty;
                 sousTotal += ligneTotal;
                 html += `<tr>
-                            <td><strong>${item.nom}</strong></td>
+                            <td><strong>${item.nom}</strong>${item.personnalisation ? '<br><small style="color:var(--gold); font-weight:600;">Personnalisation : "' + item.personnalisation + '"</small>' : ''}</td>
                             <td style="font-weight:600;">${item.qty}</td>
                             <td>${item.prix.toFixed(2)} DT</td>
                             <td style="color:var(--navy); font-weight:700;">${ligneTotal.toFixed(2)} DT</td>
@@ -1702,17 +1898,54 @@
             container.innerHTML = html;
         }
 
+        /* ---------- Validation du numéro de téléphone tunisien (8 chiffres) ---------- */
+        function validerTelephone(tel) {
+            let chiffres = tel.replace(/[^0-9]/g, '');
+            return chiffres.length === 8;
+        }
+
+        /* ---------- Mise à jour du bouton WhatsApp après succès ---------- */
+        function mettreAJourWhatsAppSuccess(nomClient, telClient, totalGeneral, sousTotal, fraisLiv) {
+            let btn = document.getElementById('btn-whatsapp-success');
+            if (!btn) return;
+            let msg = `Bonjour Journali 🌟%0AJe viens de passer une commande sur votre site :%0A`;
+            let itemsTxt = panier.length ? "" : "";
+            msg += `Nom : ${nomClient}%0ATél : ${telClient}%0AMontant total : ${totalGeneral.toFixed(2)} DT`;
+            if (fraisLiv === 0) msg += ` (livraison gratuite — Zaghouan)`;
+            msg += `%0AMerci de me confirmer la disponibilité. 📦`;
+            btn.href = "https://wa.me/21625801167?text=" + msg;
+        }
+
         function envoyerCommande(e) {
             e.preventDefault();
             if(panier.length === 0) return;
 
-            let nomClient = document.getElementById("client-nom").value;
-            let telClient = document.getElementById("client-tel").value;
-            let adresseClient = document.getElementById("client-adresse").value;
+            let nomClient = document.getElementById("client-nom").value.trim();
+            let telClient = document.getElementById("client-tel").value.trim();
+            let adresseClient = document.getElementById("client-adresse").value.trim();
+            let gouvClient = document.getElementById("client-gouv") ? document.getElementById("client-gouv").value : "";
             let dateCmd = new Date().toLocaleString('fr-FR');
             let userEmail = auth.currentUser ? auth.currentUser.email : "Invité";
 
+            // Validation du téléphone
+            let telHint = document.getElementById('tel-hint');
+            if (!validerTelephone(telClient)) {
+                if (telHint) telHint.style.display = "block";
+                toaster("Veuillez saisir un numéro de téléphone tunisien valide (8 chiffres).", "error", 4500);
+                document.getElementById("client-tel").focus();
+                return;
+            }
+            if (telHint) telHint.style.display = "none";
+
             let fraisLiv = calculerFraisLivraison();
+            let sousTotal = panier.reduce((s, it) => s + it.prix * it.qty, 0);
+            let totalGeneral = sousTotal + fraisLiv;
+
+            // État de chargement du bouton
+            let btnSubmit = e.target.querySelector('button[type="submit"]');
+            let btnOriginalText = btnSubmit.innerHTML;
+            btnSubmit.innerHTML = "⏳ Envoi en cours…";
+            btnSubmit.disabled = true;
 
             let promesses = panier.map((item, index) => {
                 let totalLigne = item.prix * item.qty;
@@ -1723,9 +1956,11 @@
                     client: nomClient,
                     compteEmail: userEmail,
                     telephone: telClient,
+                    gouvernorat: gouvClient || "Non précisé",
                     adresse: adresseClient + (index === 0 ? (fraisLiv === 0 ? " (Livraison Gratuite - Zaghouan)" : " (Inclut frais livraison 9DT)") : ""),
                     article: item.nom,
                     idArticle: item.id, 
+                    personnalisation: item.personnalisation || "",
                     quantite: item.qty,
                     total: totalLigne,
                     statut: "en attente"
@@ -1734,12 +1969,17 @@
             });
 
             Promise.all(promesses).then(() => {
+                mettreAJourWhatsAppSuccess(nomClient, telClient, totalGeneral, sousTotal, fraisLiv);
                 panier = [];
                 mettreAJourBadge();
                 sauvegarderPanier();
                 switchSection('success-section');
+                toaster("✅ Commande envoyée avec succès !");
             }).catch(err => {
-                alert("Erreur lors de l'envoi de la commande. Veuillez réessayer.");
+                toaster("Erreur lors de l'envoi de la commande. Veuillez réessayer.", "error", 5000);
+            }).finally(() => {
+                btnSubmit.innerHTML = btnOriginalText;
+                btnSubmit.disabled = false;
             });
         }
 
@@ -1760,7 +2000,7 @@
 
         function envoyerFeedback() {
             if(noteSelectionnee === 0) {
-                alert("Veuillez sélectionner un nombre d'étoiles avant d'envoyer.");
+                toaster("Veuillez sélectionner un nombre d'étoiles avant d'envoyer.", "error");
                 return;
             }
 
@@ -1771,15 +2011,21 @@
             };
 
             db.ref("data_magasin/avis").push(avisData).then(() => {
-                alert(`Merci pour votre retour de ${noteSelectionnee} étoiles ! ✨`);
+                toaster(`Merci pour votre retour de ${noteSelectionnee} étoiles ! ✨`);
                 location.reload(); 
             }).catch(err => {
-                alert("Une erreur est survenue lors de l'envoi de votre avis.");
+                toaster("Une erreur est survenue lors de l'envoi de votre avis.", "error");
             });
         }
 
-        // Chargement au démarrage
+        // Chargement au démarrage + fermeture du loader après fetch Firebase
         chargerPanier();
+        let loaderFermee = false;
+        db.ref("data_magasin/avis").limitToFirst(1).once("value").then(() => {
+            if (!loaderFermee) { fermerLoader(); loaderFermee = true; }
+        }).catch(() => { if (!loaderFermee) { fermerLoader(); loaderFermee = true; } });
+        // Sécurité : fermer le loader après 6 secondes maximum
+        setTimeout(() => { if (!loaderFermee) { fermerLoader(); loaderFermee = true; } }, 6000);
     </script>
 </body>
 </html>
